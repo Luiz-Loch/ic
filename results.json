@@ -1,0 +1,84 @@
+{
+    "Source: ./data/extract/DemoICPPointClouds/cloud_bin_0.pcd; Target: ./data/extract/DemoICPPointClouds/cloud_bin_1.pcd": {
+        "voxel: 0.05": {
+            "run: 0": {
+                "RANSAC": {
+                    "tre": 0.16519783721844095,
+                    "rre": 0.046479571950539575
+                },
+                "Fast Global Registration": {
+                    "tre": 0.12418603925300395,
+                    "rre": 0.04230342536915782
+                },
+                "RANSAC + ICP_Point": {
+                    "tre": 0.12264289522844153,
+                    "rre": 0.04144269579727018
+                },
+                "RANSAC + ICP_Plane": {
+                    "tre": 0.12256002356526813,
+                    "rre": 0.042275266936548594
+                },
+                "Fast Global Registration + ICP_Point": {
+                    "tre": 0.12213854774367729,
+                    "rre": 0.042144719810521585
+                },
+                "Fast Global Registration + ICP_Plane": {
+                    "tre": 0.122563058151246,
+                    "rre": 0.04226732486177929
+                }
+            },
+            "run: 1": {
+                "RANSAC": {
+                    "tre": 0.1634320586931364,
+                    "rre": 0.05300102157270561
+                },
+                "Fast Global Registration": {
+                    "tre": 0.11504298724871817,
+                    "rre": 0.039787539640008605
+                },
+                "RANSAC + ICP_Point": {
+                    "tre": 0.13480495991369945,
+                    "rre": 0.04022695604814225
+                },
+                "RANSAC + ICP_Plane": {
+                    "tre": 0.12255903499201258,
+                    "rre": 0.042275121234688046
+                },
+                "Fast Global Registration + ICP_Point": {
+                    "tre": 0.12197701085052141,
+                    "rre": 0.042166940692450215
+                },
+                "Fast Global Registration + ICP_Plane": {
+                    "tre": 0.12256126762399823,
+                    "rre": 0.04227552304911268
+                }
+            },
+            "run: 2": {
+                "RANSAC": {
+                    "tre": 0.09656011511980278,
+                    "rre": 0.04228179602430452
+                },
+                "Fast Global Registration": {
+                    "tre": 0.11041664533683435,
+                    "rre": 0.039281903753429145
+                },
+                "RANSAC + ICP_Point": {
+                    "tre": 0.12197193141850113,
+                    "rre": 0.042147457128764006
+                },
+                "RANSAC + ICP_Plane": {
+                    "tre": 0.12256037418247036,
+                    "rre": 0.04227523313659268
+                },
+                "Fast Global Registration + ICP_Point": {
+                    "tre": 0.12221021237420636,
+                    "rre": 0.04220461613178191
+                },
+                "Fast Global Registration + ICP_Plane": {
+                    "tre": 0.12256109148278876,
+                    "rre": 0.04227546474400419
+                }
+            }
+        }
+    }
+}

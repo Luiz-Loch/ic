@@ -1,0 +1,33 @@
+{
+    "Source: ./data/extract/DemoICPPointClouds/cloud_bin_0.pcd; Target: ./data/extract/DemoICPPointClouds/cloud_bin_1.pcd": {
+        "voxel: 0.05": {
+            "run: 0": {
+                "preprocess": 0.15521937498124316,
+                "RANSAC": 0.10125629103276879,
+                "Fast Global Registration": 0.10102599998936057,
+                "RANSAC -> ICP_Point": 1.5872252080007456,
+                "RANSAC -> ICP_Plane": 0.5504840420326218,
+                "Fast Global Registration -> ICP_Point": 0.9005974580068141,
+                "Fast Global Registration -> ICP_Plane": 0.24000225000781938
+            },
+            "run: 1": {
+                "preprocess": 0.06952987500699237,
+                "RANSAC": 0.0794734590454027,
+                "Fast Global Registration": 0.09418408299097791,
+                "RANSAC -> ICP_Point": 1.6675703329965472,
+                "RANSAC -> ICP_Plane": 0.5302313329884782,
+                "Fast Global Registration -> ICP_Point": 1.0567303340067156,
+                "Fast Global Registration -> ICP_Plane": 0.4487697079894133
+            },
+            "run: 2": {
+                "preprocess": 0.08824129198910668,
+                "RANSAC": 0.056251625006552786,
+                "Fast Global Registration": 0.1036214170162566,
+                "RANSAC -> ICP_Point": 1.863041875010822,
+                "RANSAC -> ICP_Plane": 0.532709417049773,
+                "Fast Global Registration -> ICP_Point": 0.6692825420177542,
+                "Fast Global Registration -> ICP_Plane": 0.4600423749652691
+            }
+        }
+    }
+}
