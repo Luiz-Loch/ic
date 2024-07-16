@@ -1,82 +1,120 @@
 {
-    "Source: ./data/extract/DemoICPPointClouds/cloud_bin_0.pcd; Target: ./data/extract/DemoICPPointClouds/cloud_bin_1.pcd": {
+    "Source: ./data/3DMatch/rgbd-scenes-v2-scene_10/cloud_bin_2.ply; Target: ./data/3DMatch/rgbd-scenes-v2-scene_10/cloud_bin_0.ply": {
         "voxel: 0.05": {
             "run: 0": {
                 "RANSAC": {
-                    "tre": 0.16519783721844095,
-                    "rre": 0.046479571950539575
+                    "tre": 0.0695562796785433,
+                    "rre": 0.01810855036674103
                 },
                 "Fast Global Registration": {
-                    "tre": 0.12418603925300395,
-                    "rre": 0.04230342536915782
+                    "tre": 0.14278228139444674,
+                    "rre": 0.10747269158286729
                 },
                 "RANSAC + ICP_Point": {
-                    "tre": 0.12264289522844153,
-                    "rre": 0.04144269579727018
+                    "tre": 0.08816121856412615,
+                    "rre": 0.018340195473370388
                 },
                 "RANSAC + ICP_Plane": {
-                    "tre": 0.12256002356526813,
-                    "rre": 0.042275266936548594
+                    "tre": 0.02303566572080921,
+                    "rre": 0.01045026541294592
                 },
                 "Fast Global Registration + ICP_Point": {
-                    "tre": 0.12213854774367729,
-                    "rre": 0.042144719810521585
+                    "tre": 0.09781575942129035,
+                    "rre": 0.0954627471464869
                 },
                 "Fast Global Registration + ICP_Plane": {
-                    "tre": 0.122563058151246,
-                    "rre": 0.04226732486177929
+                    "tre": 0.017787657320011342,
+                    "rre": 0.0226059899141849
                 }
-            },
-            "run: 1": {
+            }
+        }
+    },
+    "Source: ./data/3DMatch/rgbd-scenes-v2-scene_10/cloud_bin_3.ply; Target: ./data/3DMatch/rgbd-scenes-v2-scene_10/cloud_bin_1.ply": {
+        "voxel: 0.05": {
+            "run: 0": {
                 "RANSAC": {
-                    "tre": 0.1634320586931364,
-                    "rre": 0.05300102157270561
+                    "tre": 0.06084656005868852,
+                    "rre": 0.00517635973446677
                 },
                 "Fast Global Registration": {
-                    "tre": 0.11504298724871817,
-                    "rre": 0.039787539640008605
+                    "tre": 0.0646953793341457,
+                    "rre": 0.03829838129791622
                 },
                 "RANSAC + ICP_Point": {
-                    "tre": 0.13480495991369945,
-                    "rre": 0.04022695604814225
+                    "tre": 0.0943908815598727,
+                    "rre": 0.022168306212909477
                 },
                 "RANSAC + ICP_Plane": {
-                    "tre": 0.12255903499201258,
-                    "rre": 0.042275121234688046
+                    "tre": 0.11062052229140874,
+                    "rre": 0.02471711910875673
                 },
                 "Fast Global Registration + ICP_Point": {
-                    "tre": 0.12197701085052141,
-                    "rre": 0.042166940692450215
+                    "tre": 0.010454689245100927,
+                    "rre": 0.01843820688350437
                 },
                 "Fast Global Registration + ICP_Plane": {
-                    "tre": 0.12256126762399823,
-                    "rre": 0.04227552304911268
+                    "tre": 0.04336181014560778,
+                    "rre": 0.017941014449434994
                 }
-            },
-            "run: 2": {
+            }
+        }
+    },
+    "Source: ./data/3DMatch/rgbd-scenes-v2-scene_10/cloud_bin_4.ply; Target: ./data/3DMatch/rgbd-scenes-v2-scene_10/cloud_bin_2.ply": {
+        "voxel: 0.05": {
+            "run: 0": {
                 "RANSAC": {
-                    "tre": 0.09656011511980278,
-                    "rre": 0.04228179602430452
+                    "tre": 0.03326180132904793,
+                    "rre": 0.03136476899267555
                 },
                 "Fast Global Registration": {
-                    "tre": 0.11041664533683435,
-                    "rre": 0.039281903753429145
+                    "tre": 0.008620775501189478,
+                    "rre": 0.07632639971059856
                 },
                 "RANSAC + ICP_Point": {
-                    "tre": 0.12197193141850113,
-                    "rre": 0.042147457128764006
+                    "tre": 0.007035528804662155,
+                    "rre": 0.022289020195754877
                 },
                 "RANSAC + ICP_Plane": {
-                    "tre": 0.12256037418247036,
-                    "rre": 0.04227523313659268
+                    "tre": 0.08901521700198695,
+                    "rre": 0.030018578635475055
                 },
                 "Fast Global Registration + ICP_Point": {
-                    "tre": 0.12221021237420636,
-                    "rre": 0.04220461613178191
+                    "tre": 0.03399022398648404,
+                    "rre": 0.02788684826500198
                 },
                 "Fast Global Registration + ICP_Plane": {
-                    "tre": 0.12256109148278876,
-                    "rre": 0.04227546474400419
+                    "tre": 0.08906440172982472,
+                    "rre": 0.03004728594239781
+                }
+            }
+        }
+    },
+    "Source: ./data/3DMatch/rgbd-scenes-v2-scene_10/cloud_bin_8.ply; Target: ./data/3DMatch/rgbd-scenes-v2-scene_10/cloud_bin_6.ply": {
+        "voxel: 0.05": {
+            "run: 0": {
+                "RANSAC": {
+                    "tre": 0.10987589950747544,
+                    "rre": 0.04081742136144907
+                },
+                "Fast Global Registration": {
+                    "tre": 1.6110714142935654,
+                    "rre": 2.682600521687483
+                },
+                "RANSAC + ICP_Point": {
+                    "tre": 0.20598706663055213,
+                    "rre": 0.023503312940918758
+                },
+                "RANSAC + ICP_Plane": {
+                    "tre": 0.1983379636611068,
+                    "rre": 0.03308946291170348
+                },
+                "Fast Global Registration + ICP_Point": {
+                    "tre": 1.5871582026268796,
+                    "rre": 2.677084870628907
+                },
+                "Fast Global Registration + ICP_Plane": {
+                    "tre": 1.600692516008639,
+                    "rre": 2.676483345661198
                 }
             }
         }

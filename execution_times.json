@@ -1,32 +1,53 @@
 {
-    "Source: ./data/extract/DemoICPPointClouds/cloud_bin_0.pcd; Target: ./data/extract/DemoICPPointClouds/cloud_bin_1.pcd": {
+    "Source: ./data/3DMatch/rgbd-scenes-v2-scene_10/cloud_bin_2.ply; Target: ./data/3DMatch/rgbd-scenes-v2-scene_10/cloud_bin_0.ply": {
         "voxel: 0.05": {
             "run: 0": {
-                "preprocess": 0.15521937498124316,
-                "RANSAC": 0.10125629103276879,
-                "Fast Global Registration": 0.10102599998936057,
-                "RANSAC -> ICP_Point": 1.5872252080007456,
-                "RANSAC -> ICP_Plane": 0.5504840420326218,
-                "Fast Global Registration -> ICP_Point": 0.9005974580068141,
-                "Fast Global Registration -> ICP_Plane": 0.24000225000781938
-            },
-            "run: 1": {
-                "preprocess": 0.06952987500699237,
-                "RANSAC": 0.0794734590454027,
-                "Fast Global Registration": 0.09418408299097791,
-                "RANSAC -> ICP_Point": 1.6675703329965472,
-                "RANSAC -> ICP_Plane": 0.5302313329884782,
-                "Fast Global Registration -> ICP_Point": 1.0567303340067156,
-                "Fast Global Registration -> ICP_Plane": 0.4487697079894133
-            },
-            "run: 2": {
-                "preprocess": 0.08824129198910668,
-                "RANSAC": 0.056251625006552786,
-                "Fast Global Registration": 0.1036214170162566,
-                "RANSAC -> ICP_Point": 1.863041875010822,
-                "RANSAC -> ICP_Plane": 0.532709417049773,
-                "Fast Global Registration -> ICP_Point": 0.6692825420177542,
-                "Fast Global Registration -> ICP_Plane": 0.4600423749652691
+                "preprocess": 0.20045858400408179,
+                "RANSAC": 0.206195916980505,
+                "Fast Global Registration": 0.0910912910476327,
+                "RANSAC -> ICP_Point": 0.021449082996696234,
+                "RANSAC -> ICP_Plane": 0.01573916699271649,
+                "Fast Global Registration -> ICP_Point": 0.016959291009698063,
+                "Fast Global Registration -> ICP_Plane": 0.020568584033753723
+            }
+        }
+    },
+    "Source: ./data/3DMatch/rgbd-scenes-v2-scene_10/cloud_bin_3.ply; Target: ./data/3DMatch/rgbd-scenes-v2-scene_10/cloud_bin_1.ply": {
+        "voxel: 0.05": {
+            "run: 0": {
+                "preprocess": 0.08357337495544925,
+                "RANSAC": 0.18605312501313165,
+                "Fast Global Registration": 0.13756808295147493,
+                "RANSAC -> ICP_Point": 0.01955770904896781,
+                "RANSAC -> ICP_Plane": 0.021705958002712578,
+                "Fast Global Registration -> ICP_Point": 0.02038474997971207,
+                "Fast Global Registration -> ICP_Plane": 0.012636583007406443
+            }
+        }
+    },
+    "Source: ./data/3DMatch/rgbd-scenes-v2-scene_10/cloud_bin_4.ply; Target: ./data/3DMatch/rgbd-scenes-v2-scene_10/cloud_bin_2.ply": {
+        "voxel: 0.05": {
+            "run: 0": {
+                "preprocess": 0.08915749995503575,
+                "RANSAC": 0.2200660840026103,
+                "Fast Global Registration": 0.17637691705022007,
+                "RANSAC -> ICP_Point": 0.022231083014048636,
+                "RANSAC -> ICP_Plane": 0.023270541976671666,
+                "Fast Global Registration -> ICP_Point": 0.024763708002865314,
+                "Fast Global Registration -> ICP_Plane": 0.023884541995357722
+            }
+        }
+    },
+    "Source: ./data/3DMatch/rgbd-scenes-v2-scene_10/cloud_bin_8.ply; Target: ./data/3DMatch/rgbd-scenes-v2-scene_10/cloud_bin_6.ply": {
+        "voxel: 0.05": {
+            "run: 0": {
+                "preprocess": 0.07119679101742804,
+                "RANSAC": 0.2714287079870701,
+                "Fast Global Registration": 0.08816041698446497,
+                "RANSAC -> ICP_Point": 0.016036708024330437,
+                "RANSAC -> ICP_Plane": 0.0157984999823384,
+                "Fast Global Registration -> ICP_Point": 0.014193249982781708,
+                "Fast Global Registration -> ICP_Plane": 0.02957750001223758
             }
         }
     }

@@ -113,15 +113,23 @@ def preprocess_point_clouds(source_cloud: o3d.geometry.PointCloud,
 def tre(T_est: np.ndarray, T_gt: np.ndarray) -> float:
     """
     Calcula o erro de translação entre as matrizes de transformação.
+    Em caso de erro, retorna infinito (`np.inf`).
     """
-    return np.linalg.norm(T_est[:3, 3] - T_gt[:3, 3])
+    try:
+        return np.linalg.norm(T_est[:3, 3] - T_gt[:3, 3])
+    except:
+        return np.inf
 
 
 def rre(T_est, T_gt) -> float:
     """
     Calcula o erro angular entre as rotações das matrizes de transformação.
+    Em caso de erro, retorna infinito (`np.inf`).
     """
-    return np.arccos((np.trace(T_est[:3, :3].T @ T_gt[:3, :3]) - 1) / 2)
+    try:
+        return np.arccos((np.trace(T_est[:3, :3].T @ T_gt[:3, :3]) - 1) / 2)
+    except:
+        return np.inf
 
 
 def read_gt_log(file_path: str, verbose: bool = False) -> (int, int, np.ndarray):
@@ -299,7 +307,7 @@ def fast_global_registration(source_cloud: o3d.geometry.PointCloud,
 @measure_time
 def fine_alignment_point_to_point(source_cloud: o3d.geometry.PointCloud,
                                   target_cloud: o3d.geometry.PointCloud,
-                                  initial_transform: o3d.pipelines.registration.RegistrationResult,
+                                  initial_transform: np.ndarray,
                                   voxel_size: int | float,
                                   verbose: bool = False) -> o3d.pipelines.registration.RegistrationResult:
     """
@@ -311,7 +319,7 @@ def fine_alignment_point_to_point(source_cloud: o3d.geometry.PointCloud,
     if verbose:
         print("Realizando o alinhamento com ICP - Point to Point")
     result = o3d.pipelines.registration.registration_icp(source_cloud, target_cloud, distance_threshold,
-                                                         initial_transform.transformation,
+                                                         initial_transform,
                                                          o3d.pipelines.registration.TransformationEstimationPointToPoint())
     return result
 
@@ -319,7 +327,7 @@ def fine_alignment_point_to_point(source_cloud: o3d.geometry.PointCloud,
 @measure_time
 def fine_alignment_point_to_plane(source_cloud: o3d.geometry.PointCloud,
                                   target_cloud: o3d.geometry.PointCloud,
-                                  initial_transform: o3d.pipelines.registration.RegistrationResult,
+                                  initial_transform: np.ndarray,
                                   voxel_size: int | float,
                                   verbose: bool = False) -> o3d.pipelines.registration.RegistrationResult:
     """
@@ -331,7 +339,7 @@ def fine_alignment_point_to_plane(source_cloud: o3d.geometry.PointCloud,
     if verbose:
         print("Realizando o alinhamento com ICP - Point to Plane com ")
     result = o3d.pipelines.registration.registration_icp(source_cloud, target_cloud, distance_threshold,
-                                                         initial_transform.transformation,
+                                                         initial_transform,
                                                          o3d.pipelines.registration.TransformationEstimationPointToPlane())
     return result
 

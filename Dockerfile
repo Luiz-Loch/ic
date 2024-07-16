@@ -2,7 +2,7 @@
 FROM python:3.11.9
 
 # scipy pode ser utilizado pelo TEASER++
-RUN pip install scipy tqdm
+RUN pip install scipy tqdm boto3
 
 # Instalação das dependências do Open3D
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -20,8 +20,7 @@ RUN apt-get update && apt-get install -y \
     cmake \
     libeigen3-dev \
     libboost-all-dev \
-    g++ \
-    git
+    g++
 
 # Definição do diretório de trabalho como /app
 WORKDIR /app
