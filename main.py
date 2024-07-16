@@ -23,7 +23,7 @@ if __name__ == '__main__':
     # Obter ID e Nome da Instância
     if ON_AWS:
         instance_id = modulos.get_instance_id()
-        instance_name = modulos.od(instance_id)
+        instance_name = modulos.get_instance_name(instance_id)
 
         print(f'ID da Instância: {instance_id}')
         if instance_name:
