@@ -32,30 +32,44 @@ def upload_to_aws(local_file: str, bucket: str, s3_file: str) -> bool:
         return False
 
 
-def get_instance_id() -> str:
+def get_instance_id() -> str | None:
     """
         Função para obter o ID da instância
     """
-    response = requests.get('http://169.254.169.254/latest/meta-data/instance-id')
-    return response.text
+    try:
+        # Obter o token
+        token_url = 'http://169.254.169.254/latest/api/token'
+        token_headers = {'X-aws-ec2-metadata-token-ttl-seconds': '21600'}
+        token_response = requests.put(token_url, headers=token_headers)
+        token = token_response.text
+
+        # Usar o token para acessar os metadados
+        metadata_url = 'http://169.254.169.254/latest/meta-data/instance-id'
+        metadata_headers = {'X-aws-ec2-metadata-token': token}
+        response = requests.get(metadata_url, headers=metadata_headers)
+        response.raise_for_status()
+        return response.text
+    except requests.RequestException as e:
+        print(f"Erro ao obter o ID da instância: {e}")
+        return None
 
 
-def get_instance_name(instance_id: str) -> str | None:
+def get_instance_name(instance_id: str, region_name: str = 'us-east-1') -> str | None:
     """
         Função para obter o nome da instância (Tag "Name")
     """
-    ec2 = boto3.client('ec2')
-    response = ec2.describe_instances(InstanceIds=[instance_id])
-    reservations = response.get("Reservations")
-    if reservations:
-        instances = reservations[0].get("Instances")
-        if instances:
-            tags = instances[0].get("Tags")
-            if tags:
-                for tag in tags:
-                    if tag["Key"] == "Name":
-                        return tag["Value"]
-    return None
+    try:
+        ec2 = boto3.client('ec2', region_name=region_name)
+        response = ec2.describe_instances(InstanceIds=[instance_id])
+        for reservation in response['Reservations']:
+            for instance in reservation['Instances']:
+                for tag in instance.get('Tags', []):
+                    if tag['Key'] == 'Name':
+                        return tag['Value']
+        return None
+    except Exception as e:
+        print(f"Erro ao obter o nome da instância: {e}")
+        return None
 
 
 # ######################################################################################
@@ -132,7 +146,7 @@ def rre(T_est, T_gt) -> float:
         return np.inf
 
 
-def read_gt_log(file_path: str, verbose: bool = False) -> (int, int, np.ndarray):
+def read_gt_log(file_path: str, verbose: bool = False) -> tuple[int, int, np.ndarray]:
     """
         Lê um arquivo  `gt.log` de transformação e retorna uma lista de tuplas.
     """

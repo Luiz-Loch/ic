@@ -7,13 +7,14 @@ if __name__ == '__main__':
     VERBOSE = False
     NUM_OF_EXEC = 1
     voxel_sizes = (0.05,)
-    DATASETS = modulos.get_datasets('./data/3DMatch/rgbd-scenes-v2-scene_10')
+    DATASETS = modulos.get_datasets('./data')
     CURRENT_DATE = datetime.now().strftime('%Y-%m-%d')
     # Registra o momento de início
     start_time = datetime.now()
 
-    ON_AWS = False
+    ON_AWS = True
     BUCKET = 'benchmarks-ic'
+    region_name = 'us-east-1'
 
     execution_times = {}
     EXECUTION_FILE = 'execution_times.json'
