@@ -17,6 +17,6 @@ if __name__ == '__main__':
     # O arquivo `execution_times.json` é enviado para o bucket com o nome `execution_times.json`
     s3_file = f'{instance_name}/Teste'
     if modulos.upload_to_aws(TESTE_FILE, BUCKET, s3_file):
-        print(f'Arquivo `execution_times.json` enviado para o bucket {BUCKET} com sucesso!')
+        print(f'Arquivo `{TESTE_FILE}` enviado para o bucket {BUCKET} com sucesso!')
     else:
-        print(f'Erro ao enviar o arquivo `execution_times.json` para o bucket {BUCKET}')
+        print(f'Erro ao enviar o arquivo `{TESTE_FILE}` para o bucket {BUCKET}')

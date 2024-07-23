@@ -7,9 +7,7 @@ import requests
 import boto3
 from botocore.exceptions import NoCredentialsError
 from scipy.spatial import KDTree
-
-
-# import teaserpp_python
+import teaserpp_python
 
 
 # ######################################################################################
@@ -54,7 +52,7 @@ def get_instance_id() -> str | None:
         return None
 
 
-def get_instance_name(instance_id: str, region_name: str = 'us-east-1') -> str | None:
+def get_instance_name(instance_id: str | None, region_name: str = 'us-east-1') -> str | None:
     """
         Função para obter o nome da instância (Tag "Name")
     """
@@ -69,6 +67,32 @@ def get_instance_name(instance_id: str, region_name: str = 'us-east-1') -> str |
         return None
     except Exception as e:
         print(f"Erro ao obter o nome da instância: {e}")
+        return None
+
+
+def get_container_or_instance_name(region_name: str = 'us-east-1') -> str | None:
+    """
+        Função para obter o nome da instância ou do contêiner
+    """
+    instance_id = get_instance_id()
+    if instance_id:
+        # Se a instância estiver em execução no EC2, tente obter o nome da instância
+        instance_name = get_instance_name(instance_id, region_name)
+        if instance_name:
+            return instance_name
+
+    # Se não for possível obter o nome da instância, tente obter o nome do contêiner ECS
+    try:
+        ecs_metadata_url = 'http://169.254.170.2/v2/metadata'
+        response = requests.get(ecs_metadata_url)
+        response.raise_for_status()
+        metadata = response.json()
+
+        # Coleta o nome da tarefa ECS
+        task_name = metadata.get('TaskARN').split('/')[-1]
+        return task_name
+    except requests.RequestException:
+        # Se não for possível obter o nome do contêiner, retorne None
         return None
 
 
@@ -176,7 +200,7 @@ def read_gt_log(file_path: str, verbose: bool = False) -> tuple[int, int, np.nda
         yield source, target, t_gt
 
 
-def get_datasets(data_dir: str, verbose: bool = False) -> list:
+def get_datasets(data_dir: str, verbose: bool = False) -> tuple[str, str, np.ndarray]:
     """
         Retorna uma lista de tuplas com os caminhos dos arquivos `gt.log`, `source.ply` e `target.ply`.
     """
@@ -184,7 +208,6 @@ def get_datasets(data_dir: str, verbose: bool = False) -> list:
         print("#" * 50)
         print(f"Dentro da função {get_datasets.__name__}.")
         print(f"Procurando arquivos `gt.log` dentro do diretório {data_dir}.")
-    datasets = []
     for root, dirs, files in os.walk(data_dir):
         if verbose:
             print(f"Procurando arquivos dentro do diretório {root}.")
@@ -229,12 +252,8 @@ def get_datasets(data_dir: str, verbose: bool = False) -> list:
                                 print(f"Ambos os arquivos foram encontrados.")
                             break
                     if verbose:
-                        print(f"Adicionando à lista de datasets.")
-                    datasets.append((source_ply_path, target_ply_path, t_gt))
-    if verbose:
-        print("Fim da função.")
-        print("#" * 50)
-    return datasets
+                        print(f'Retornando os valores: {source_ply_path}, {target_ply_path}, {t_gt}')
+                    yield source_ply_path, target_ply_path, t_gt
 
 
 def draw_registration_result(source: o3d.geometry.PointCloud, target: o3d.geometry.PointCloud, transformation) -> None:
@@ -330,11 +349,11 @@ def fine_alignment_point_to_point(source_cloud: o3d.geometry.PointCloud,
         Referência: https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html#Local-refinement
     """
     distance_threshold = voxel_size * 0.4
+    icp_method = o3d.pipelines.registration.TransformationEstimationPointToPoint()
     if verbose:
         print("Realizando o alinhamento com ICP - Point to Point")
     result = o3d.pipelines.registration.registration_icp(source_cloud, target_cloud, distance_threshold,
-                                                         initial_transform,
-                                                         o3d.pipelines.registration.TransformationEstimationPointToPoint())
+                                                         initial_transform, icp_method)
     return result
 
 
@@ -350,11 +369,11 @@ def fine_alignment_point_to_plane(source_cloud: o3d.geometry.PointCloud,
         Referência: https://www.open3d.org/docs/release/tutorial/pipelines/global_registration.html#Local-refinement
     """
     distance_threshold = voxel_size * 0.4
+    icp_method = o3d.pipelines.registration.TransformationEstimationPointToPlane()
     if verbose:
         print("Realizando o alinhamento com ICP - Point to Plane com ")
     result = o3d.pipelines.registration.registration_icp(source_cloud, target_cloud, distance_threshold,
-                                                         initial_transform,
-                                                         o3d.pipelines.registration.TransformationEstimationPointToPlane())
+                                                         initial_transform, icp_method)
     return result
 
 

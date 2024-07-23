@@ -4,7 +4,7 @@ import modulos
 if __name__ == '__main__':
     # Caminho do diretório
     data_dir = '../data/3DMatch/rgbd-scenes-v2-scene_10'
-    VERBOSE = True
+    VERBOSE = False
 
     # Teste da função get_datasets
     for source_ply_path, target_ply_path, t_gt in modulos.get_datasets(data_dir, VERBOSE):

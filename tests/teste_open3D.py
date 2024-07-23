@@ -31,8 +31,8 @@ if __name__ == '__main__':
 
     if VERBOSE:
         print("Refinando o alinhamento com ICP Point-to-Point e ICP Point-to-Plane...")
-    # result_gr_icp_point, _ = modulos.fine_alignment_point_to_point(source_down, target_down, result_gr.transformation,
-    #                                                                VOXEL_SIZE, VERBOSE)
+    result_gr_icp_point, _ = modulos.fine_alignment_point_to_point(source_down, target_down, result_gr.transformation,
+                                                                   VOXEL_SIZE, VERBOSE)
     result_gr_icp_plane, _ = modulos.fine_alignment_point_to_plane(source_down, target_down, result_gr.transformation,
                                                                    VOXEL_SIZE, VERBOSE)
 
