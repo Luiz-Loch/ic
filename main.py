@@ -4,28 +4,28 @@ import json
 import modulos
 
 if __name__ == '__main__':
-    VERBOSE = False
-    NUM_OF_EXEC = 1
-    voxel_sizes = (0.05,)
-    DATASETS = modulos.get_datasets('./data/3DMatch/rgbd-scenes-v2-scene_10')
-    CURRENT_DATE = datetime.now().strftime('%Y-%m-%d')
+    VERBOSE: bool = False
+    NUM_OF_EXEC: int = 4
+    voxel_sizes: tuple[float] = (0.05,)
+    DATASETS = modulos.get_datasets('./data')
+    CURRENT_DATE: str = datetime.now().strftime('%Y-%m-%d')
     # Registra o momento de início
     start_time = datetime.now()
-    DO_ICP = False
+    DO_ICP: bool = True
 
-    ON_AWS = False
-    BUCKET = 'benchmarks-ic'
-    region_name = 'us-east-1'
+    ON_AWS: bool = False
+    BUCKET: str = 'benchmarks-ic'
+    region_name: str = 'us-east-1'
 
     execution_times = {}
-    EXECUTION_FILE = 'execution_times.json'
+    EXECUTION_FILE: str = 'execution_times.json'
     results = {}
-    RESULTS_FILE = 'results.json'
+    RESULTS_FILE: str = 'results.json'
 
-    # Obter ID e Nome da Instância
+    # Obter ID e nome da instância
     if ON_AWS:
-        instance_id = modulos.get_instance_id()
-        instance_name = modulos.get_instance_name(instance_id)
+        instance_id: str | None = modulos.get_instance_id()
+        instance_name: str | None = modulos.get_instance_name(instance_id)
         print(f'ID da Instância: {instance_id}')
         if instance_name:
             print(f'Nome da Instância: {instance_name}')
@@ -38,7 +38,7 @@ if __name__ == '__main__':
         # A ordem das nuvem foi invertida
 
         # Cria as chaves para os dicionários:
-        key_img = f'Source: {source_ply_path}; Target: {target_ply_path}'
+        key_img: str = f'Source: {source_ply_path}; Target: {target_ply_path}'
         execution_times[key_img] = {}
         results[key_img] = {}
 
@@ -50,12 +50,12 @@ if __name__ == '__main__':
         results[key_img]['length of target'] = len(target_cloud.points)
 
         for voxel_size in tqdm(voxel_sizes):
-            key_voxel = f'voxel: {voxel_size}'
+            key_voxel: str = f'voxel: {voxel_size}'
             execution_times[key_img][key_voxel] = {}
             results[key_img][key_voxel] = {}
 
             for run in trange(NUM_OF_EXEC):
-                run_key = f'run: {run}'
+                run_key: str = f'run: {run}'
                 execution_times[key_img][key_voxel][run_key] = {}
                 results[key_img][key_voxel][run_key] = {}
 

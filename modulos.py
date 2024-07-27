@@ -7,7 +7,7 @@ import requests
 import boto3
 from botocore.exceptions import NoCredentialsError
 from scipy.spatial import KDTree
-import teaserpp_python
+# import teaserpp_python
 
 
 # ######################################################################################
@@ -67,32 +67,6 @@ def get_instance_name(instance_id: str | None, region_name: str = 'us-east-1') -
         return None
     except Exception as e:
         print(f"Erro ao obter o nome da instância: {e}")
-        return None
-
-
-def get_container_or_instance_name(region_name: str = 'us-east-1') -> str | None:
-    """
-        Função para obter o nome da instância ou do contêiner
-    """
-    instance_id = get_instance_id()
-    if instance_id:
-        # Se a instância estiver em execução no EC2, tente obter o nome da instância
-        instance_name = get_instance_name(instance_id, region_name)
-        if instance_name:
-            return instance_name
-
-    # Se não for possível obter o nome da instância, tente obter o nome do contêiner ECS
-    try:
-        ecs_metadata_url = 'http://169.254.170.2/v2/metadata'
-        response = requests.get(ecs_metadata_url)
-        response.raise_for_status()
-        metadata = response.json()
-
-        # Coleta o nome da tarefa ECS
-        task_name = metadata.get('TaskARN').split('/')[-1]
-        return task_name
-    except requests.RequestException:
-        # Se não for possível obter o nome do contêiner, retorne None
         return None
 
 
