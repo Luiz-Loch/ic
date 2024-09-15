@@ -1,4 +1,5 @@
 from tqdm import tqdm, trange
+import numpy as np
 from datetime import datetime
 import json
 import modulos
@@ -7,7 +8,7 @@ if __name__ == '__main__':
     VERBOSE: bool = False
     NUM_OF_EXEC: int = 4
     voxel_sizes: tuple[float] = (0.05,)
-    DATASETS = modulos.get_datasets('./data')
+    DATASETS = modulos.get_datasets('./data/3DMatch/rgbd-scenes-v2-scene_10')
     CURRENT_DATE: str = datetime.now().strftime('%Y-%m-%d')
     # Registra o momento de início
     start_time = datetime.now()
@@ -66,135 +67,36 @@ if __name__ == '__main__':
                 source_down, target_down, source_features, target_features = results_preprocess
                 execution_times[key_img][key_voxel][run_key]['preprocess'] = execution_time
 
-                # Aplica o alinhamento RANSAC:
-                result_gr, execution_time = modulos.global_registration(source_down, target_down, source_features,
-                                                                        target_features,
-                                                                        voxel_size)
-                execution_times[key_img][key_voxel][run_key]['RANSAC'] = execution_time
-                results[key_img][key_voxel][run_key]['RANSAC'] = {}
-                results[key_img][key_voxel][run_key]['RANSAC']['transformation'] = result_gr.transformation.tolist()
-                results[key_img][key_voxel][run_key]['RANSAC']['tre'] = modulos.tre(result_gr.transformation, t_gt)
-                results[key_img][key_voxel][run_key]['RANSAC']['rre'] = modulos.rre(result_gr.transformation, t_gt)
-
-                # Aplica o alinhamento FGR:
-                result_fgr, execution_time = modulos.fast_global_registration(source_down, target_down, source_features,
-                                                                              target_features, voxel_size)
-                execution_times[key_img][key_voxel][run_key]['Fast Global Registration'] = execution_time
-                results[key_img][key_voxel][run_key]['Fast Global Registration'] = {}
-                results[key_img][key_voxel][run_key]['Fast Global Registration'][
-                    'transformation'] = result_fgr.transformation.tolist()
-                results[key_img][key_voxel][run_key]['Fast Global Registration']['tre'] = modulos.tre(
-                    result_fgr.transformation, t_gt)
-                results[key_img][key_voxel][run_key]['Fast Global Registration']['rre'] = modulos.rre(
-                    result_fgr.transformation, t_gt)
-
                 if DO_ICP:
-                    # Refina o alinhamento RANSAC com ICP Point-to-Point:
-                    result_gr_icp_point, execution_time = modulos.fine_alignment_point_to_point(source_down,
-                                                                                                target_down,
-                                                                                                result_gr.transformation,
-                                                                                                voxel_size)
-                    execution_times[key_img][key_voxel][run_key]['RANSAC -> ICP_Point'] = execution_time
-                    results[key_img][key_voxel][run_key]['RANSAC + ICP_Point'] = {}
-                    results[key_img][key_voxel][run_key]['RANSAC + ICP_Point'][
-                        'transformation'] = result_gr_icp_point.transformation.tolist()
-                    results[key_img][key_voxel][run_key]['RANSAC + ICP_Point']['tre'] = modulos.tre(
-                        result_gr_icp_point.transformation, t_gt)
-                    results[key_img][key_voxel][run_key]['RANSAC + ICP_Point']['rre'] = modulos.rre(
-                        result_gr_icp_point.transformation, t_gt)
+                    # ICP Point-to-Point:
+                    result_icp_point, execution_time = modulos.fine_alignment_point_to_point(source_down,
+                                                                                             target_down,
+                                                                                             np.eye(4),
+                                                                                             voxel_size)
+                    execution_times[key_img][key_voxel][run_key]['ICP Point'] = execution_time
+                    results[key_img][key_voxel][run_key]['ICP Point'] = {}
+                    results[key_img][key_voxel][run_key]['ICP Point'][
+                        'transformation'] = result_icp_point.transformation.tolist()
+                    results[key_img][key_voxel][run_key]['ICP Point']['tre'] = modulos.tre(
+                        result_icp_point.transformation, t_gt)
+                    results[key_img][key_voxel][run_key]['ICP Point']['rre'] = modulos.rre(
+                        result_icp_point.transformation, t_gt)
 
-                    # Refina o alinhamento RANSAC com ICP Point-to-Plane:
-                    result_gr_icp_plane, execution_time = modulos.fine_alignment_point_to_plane(source_down,
-                                                                                                target_down,
-                                                                                                result_gr.transformation,
-                                                                                                voxel_size)
-                    execution_times[key_img][key_voxel][run_key]['RANSAC -> ICP_Plane'] = execution_time
-                    results[key_img][key_voxel][run_key]['RANSAC + ICP_Plane'] = {}
-                    results[key_img][key_voxel][run_key]['RANSAC + ICP_Plane'][
-                        'transformation'] = result_gr_icp_plane.transformation.tolist()
-                    results[key_img][key_voxel][run_key]['RANSAC + ICP_Plane']['tre'] = modulos.tre(
-                        result_gr_icp_plane.transformation, t_gt)
-                    results[key_img][key_voxel][run_key]['RANSAC + ICP_Plane']['rre'] = modulos.rre(
-                        result_gr_icp_plane.transformation, t_gt)
+                    # ICP Point-to-Plane:
+                    result_icp_plane, execution_time = modulos.fine_alignment_point_to_plane(source_down,
+                                                                                             target_down,
+                                                                                             np.eye(4),
+                                                                                             voxel_size)
+                    execution_times[key_img][key_voxel][run_key]['ICP Plane'] = execution_time
+                    results[key_img][key_voxel][run_key]['ICP Plane'] = {}
+                    results[key_img][key_voxel][run_key]['ICP Plane'][
+                        'transformation'] = result_icp_plane.transformation.tolist()
+                    results[key_img][key_voxel][run_key]['ICP Plane']['tre'] = modulos.tre(
+                        result_icp_plane.transformation, t_gt)
+                    results[key_img][key_voxel][run_key]['ICP Plane']['rre'] = modulos.rre(
+                        result_icp_plane.transformation, t_gt)
 
-                    # Refina o alinhamento FGR com ICP Point-to-Point:
-                    result_fgr_icp_point, execution_time = modulos.fine_alignment_point_to_point(source_down,
-                                                                                                 target_down,
-                                                                                                 result_fgr.transformation,
-                                                                                                 voxel_size)
-                    execution_times[key_img][key_voxel][run_key][
-                        'Fast Global Registration -> ICP_Point'] = execution_time
-                    results[key_img][key_voxel][run_key]['Fast Global Registration + ICP_Point'] = {}
-                    results[key_img][key_voxel][run_key]['Fast Global Registration + ICP_Point'][
-                        'transformation'] = result_fgr_icp_point.transformation.tolist()
-                    results[key_img][key_voxel][run_key]['Fast Global Registration + ICP_Point']['tre'] = modulos.tre(
-                        result_fgr_icp_point.transformation, t_gt)
-                    results[key_img][key_voxel][run_key]['Fast Global Registration + ICP_Point']['rre'] = modulos.rre(
-                        result_fgr_icp_point.transformation, t_gt)
-
-                    # Refina o alinhamento FGR com ICP Point-to-Plane:
-                    result_fgr_icp_plane, execution_time = modulos.fine_alignment_point_to_plane(source_down,
-                                                                                                 target_down,
-                                                                                                 result_fgr.transformation,
-                                                                                                 voxel_size)
-                    execution_times[key_img][key_voxel][run_key][
-                        'Fast Global Registration -> ICP_Plane'] = execution_time
-                    results[key_img][key_voxel][run_key]['Fast Global Registration + ICP_Plane'] = {}
-                    results[key_img][key_voxel][run_key]['Fast Global Registration + ICP_Plane'][
-                        'transformation'] = result_fgr_icp_plane.transformation.tolist()
-                    results[key_img][key_voxel][run_key]['Fast Global Registration + ICP_Plane']['tre'] = modulos.tre(
-                        result_fgr_icp_plane.transformation, t_gt)
-                    results[key_img][key_voxel][run_key]['Fast Global Registration + ICP_Plane']['rre'] = modulos.rre(
-                        result_fgr_icp_plane.transformation, t_gt)
-
-                # ########################### TEASE++ ###########################
-                result_teaser, execution_time = modulos.robust_global_registration(source_down, target_down,
-                                                                                   source_features,
-                                                                                   target_features,
-                                                                                   voxel_size)
-
-                R_teaser = result_teaser.rotation
-                t_teaser = result_teaser.translation
-                T_teaser = modulos.Rt2T(R_teaser, t_teaser)
-
-                execution_times[key_img][key_voxel][run_key]['Robust Global Registration'] = execution_time
-                results[key_img][key_voxel][run_key]['Robust Global Registration'] = {}
-                results[key_img][key_voxel][run_key]['Robust Global Registration']['transformation'] = T_teaser.tolist()
-                results[key_img][key_voxel][run_key]['Robust Global Registration']['tre'] = modulos.tre(T_teaser, t_gt)
-                results[key_img][key_voxel][run_key]['Robust Global Registration']['rre'] = modulos.rre(T_teaser, t_gt)
-
-                # Refina o alinhamento TEASER com ICP Point-to-Point:
-                if DO_ICP:
-                    result_teaser_icp_point, execution_time = modulos.fine_alignment_point_to_point(source_down,
-                                                                                                    target_down,
-                                                                                                    T_teaser,
-                                                                                                    voxel_size)
-                    execution_times[key_img][key_voxel][run_key][
-                        'Robust Global Registration -> ICP_Point'] = execution_time
-                    results[key_img][key_voxel][run_key]['Robust Global Registration + ICP_Point'] = {}
-                    results[key_img][key_voxel][run_key]['Robust Global Registration + ICP_Point'][
-                        'transformation'] = result_teaser_icp_point.transformation.tolist()
-                    results[key_img][key_voxel][run_key]['Robust Global Registration + ICP_Point']['tre'] = modulos.tre(
-                        result_teaser_icp_point.transformation, t_gt)
-                    results[key_img][key_voxel][run_key]['Robust Global Registration + ICP_Point']['rre'] = modulos.rre(
-                        result_teaser_icp_point.transformation, t_gt)
-
-                    # Refina o alinhamento TEASER com ICP Point-to-Plane:
-                    result_teaser_icp_plane, execution_time = modulos.fine_alignment_point_to_plane(source_down,
-                                                                                                    target_down,
-                                                                                                    T_teaser,
-                                                                                                    voxel_size)
-                    execution_times[key_img][key_voxel][run_key][
-                        'Robust Global Registration -> ICP_Plane'] = execution_time
-                    results[key_img][key_voxel][run_key]['Robust Global Registration + ICP_Plane'] = {}
-                    results[key_img][key_voxel][run_key]['Robust Global Registration + ICP_Plane'][
-                        'transformation'] = result_teaser_icp_plane.transformation.tolist()
-                    results[key_img][key_voxel][run_key]['Robust Global Registration + ICP_Plane']['tre'] = modulos.tre(
-                        result_teaser_icp_plane.transformation, t_gt)
-                    results[key_img][key_voxel][run_key]['Robust Global Registration + ICP_Plane']['rre'] = modulos.rre(
-                        result_teaser_icp_plane.transformation, t_gt)
-
-                # ########################### ####### ###########################
+    # ########################### ####### ###########################
 
     with open(EXECUTION_FILE, 'w') as f:
         json.dump(execution_times, f, indent=4)
