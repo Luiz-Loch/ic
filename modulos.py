@@ -7,6 +7,8 @@ import requests
 import boto3
 from botocore.exceptions import NoCredentialsError
 from scipy.spatial import KDTree
+
+
 # import teaserpp_python
 
 
@@ -230,22 +232,33 @@ def get_datasets(data_dir: str, verbose: bool = False) -> tuple[str, str, np.nda
                     yield source_ply_path, target_ply_path, t_gt
 
 
-def draw_registration_result(source: o3d.geometry.PointCloud, target: o3d.geometry.PointCloud, transformation) -> None:
+def draw_registration_result(source: o3d.geometry.PointCloud,
+                             target: o3d.geometry.PointCloud,
+                             transformation: np.ndarray,
+                             nome: str = "Open3D") -> None:
     """
         Desenha as nuvens de pontos alinhadas.
     """
     voxel_size = 0.10
+    radius_normal = voxel_size * 2
+
     source_temp = copy.deepcopy(source)
     target_temp = copy.deepcopy(target)
 
     source_temp.voxel_down_sample(voxel_size)
     target_temp.voxel_down_sample(voxel_size)
 
-    source_temp.paint_uniform_color([1, 0.706, 0])
-    target.paint_uniform_color([0, 0.651, 0.929])
+    source_temp.paint_uniform_color([0.96, 0.76, 0.26])  # Amarelo
+    # source_temp.paint_uniform_color([1, 0, 0])  # Vermelho
+    target_temp.paint_uniform_color([0.40, 0.74, 0.85])  # Azul
+    # target_temp.paint_uniform_color([1, 0.65, 0])  # Laranja
+
+    source_temp.estimate_normals(o3d.geometry.KDTreeSearchParamHybrid(radius=radius_normal, max_nn=30))
+    target_temp.estimate_normals(o3d.geometry.KDTreeSearchParamHybrid(radius=radius_normal, max_nn=30))
 
     source_temp.transform(transformation)
-    o3d.visualization.draw_plotly([source_temp, target_temp])
+    o3d.visualization.draw_geometries([source_temp, target_temp], window_name=nome)
+    # o3d.visualization.draw_plotly([source_temp, target_temp], )
 
 
 # ######################################################################################

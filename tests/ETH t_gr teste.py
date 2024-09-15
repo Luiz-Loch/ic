@@ -2,7 +2,7 @@ import modulos
 import numpy as np
 
 if __name__ == '__main__':
-    test = 5
+    test = 4
     print('Teste com arquivos do diretório ETH')
     if test == 1:
         # Source + Target.transformation
@@ -22,7 +22,7 @@ if __name__ == '__main__':
         target_cloud = modulos.load_point_cloud(target_ply_path)
         print('Nuvens de pontos carregadas.')
         print("Nuvens de ponto alinhadas: ")
-        modulos.draw_registration_result(source_cloud, target_cloud, t_gt)
+        modulos.draw_registration_result(target_cloud, source_cloud, t_gt, nome='ETH')
         print('#' * 50)
 
     if test == 2:
@@ -43,7 +43,7 @@ if __name__ == '__main__':
         target_cloud = modulos.load_point_cloud(target_ply_path)
         print('Nuvens de pontos carregadas.')
         print("Nuvens de ponto alinhadas: ")
-        modulos.draw_registration_result(source_cloud, target_cloud, t_gt)
+        modulos.draw_registration_result(target_cloud, source_cloud, t_gt, nome='ETH')
         print('#' * 50)
 
     if test == 3:
@@ -64,7 +64,7 @@ if __name__ == '__main__':
         target_cloud = modulos.load_point_cloud(target_ply_path)
         print('Nuvens de pontos carregadas.')
         print("Nuvens de ponto alinhadas: ")
-        modulos.draw_registration_result(source_cloud, target_cloud, t_gt)
+        modulos.draw_registration_result(target_cloud, source_cloud, t_gt, nome='ETH')
         print('#' * 50)
 
     if test == 4:
@@ -85,7 +85,7 @@ if __name__ == '__main__':
         target_cloud = modulos.load_point_cloud(target_ply_path)
         print('Nuvens de pontos carregadas.')
         print("Nuvens de ponto alinhadas: ")
-        modulos.draw_registration_result(target_cloud, source_cloud, t_gt)
+        modulos.draw_registration_result(target_cloud, source_cloud, t_gt, nome='ETH')
         print('#' * 50)
 
     if test == 5:
@@ -111,7 +111,7 @@ if __name__ == '__main__':
                                                    target_features,
                                                    voxel_size)
 
-        # modulos.draw_registration_result(source_cloud, target_cloud, result_gr.transformation)
+        modulos.draw_registration_result(source_cloud, target_cloud, result_gr.transformation, nome='ETH')
 
         print('Source, Target')
         print(f'RRE: {modulos.rre(result_gr.transformation, t_gt)}')
