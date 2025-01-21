@@ -1,4 +1,4 @@
-import modulos
+import utils
 import numpy as np
 
 if __name__ == '__main__':
@@ -18,11 +18,11 @@ if __name__ == '__main__':
                          [0.0, 0.0, 0.0, 1.0]])
 
         print('Carregando nuvens de pontos.')
-        source_cloud = modulos.load_point_cloud(source_ply_path)
-        target_cloud = modulos.load_point_cloud(target_ply_path)
+        source_cloud = utils.load_point_cloud(source_ply_path)
+        target_cloud = utils.load_point_cloud(target_ply_path)
         print('Nuvens de pontos carregadas.')
         print("Nuvens de ponto alinhadas: ")
-        modulos.draw_registration_result(source_cloud, target_cloud, t_gt)
+        utils.draw_registration_result(source_cloud, target_cloud, t_gt)
         print('#' * 50)
 
     if test == 2:
@@ -39,11 +39,11 @@ if __name__ == '__main__':
                          [0.0, 0.0, 0.0, 1.0]])
 
         print('Carregando nuvens de pontos.')
-        source_cloud = modulos.load_point_cloud(source_ply_path)
-        target_cloud = modulos.load_point_cloud(target_ply_path)
+        source_cloud = utils.load_point_cloud(source_ply_path)
+        target_cloud = utils.load_point_cloud(target_ply_path)
         print('Nuvens de pontos carregadas.')
         print("Nuvens de ponto alinhadas: ")
-        modulos.draw_registration_result(source_cloud, target_cloud, t_gt)
+        utils.draw_registration_result(source_cloud, target_cloud, t_gt)
         print('#' * 50)
 
     if test == 3:
@@ -60,11 +60,11 @@ if __name__ == '__main__':
                          [0.0, 0.0, 0.0, 1.0]])
 
         print('Carregando nuvens de pontos.')
-        source_cloud = modulos.load_point_cloud(source_ply_path)
-        target_cloud = modulos.load_point_cloud(target_ply_path)
+        source_cloud = utils.load_point_cloud(source_ply_path)
+        target_cloud = utils.load_point_cloud(target_ply_path)
         print('Nuvens de pontos carregadas.')
         print("Nuvens de ponto alinhadas: ")
-        modulos.draw_registration_result(source_cloud, target_cloud, t_gt)
+        utils.draw_registration_result(source_cloud, target_cloud, t_gt)
         print('#' * 50)
 
     if test == 4:
@@ -81,11 +81,11 @@ if __name__ == '__main__':
                          [0.0, 0.0, 0.0, 1.0]])
 
         print('Carregando nuvens de pontos.')
-        source_cloud = modulos.load_point_cloud(source_ply_path)
-        target_cloud = modulos.load_point_cloud(target_ply_path)
+        source_cloud = utils.load_point_cloud(source_ply_path)
+        target_cloud = utils.load_point_cloud(target_ply_path)
         print('Nuvens de pontos carregadas.')
         print("Nuvens de ponto alinhadas: ")
-        modulos.draw_registration_result(source_cloud, target_cloud, t_gt)
+        utils.draw_registration_result(source_cloud, target_cloud, t_gt)
         print('#' * 50)
 
     if test == 5:
@@ -97,22 +97,22 @@ if __name__ == '__main__':
                          [0.146988582971, -0.102135042662, 0.983836308333, 1.0922412657],
                          [0.0, 0.0, 0.0, 1.0]])
 
-        source_cloud = modulos.load_point_cloud(source_ply_path)
-        target_cloud = modulos.load_point_cloud(target_ply_path)
+        source_cloud = utils.load_point_cloud(source_ply_path)
+        target_cloud = utils.load_point_cloud(target_ply_path)
 
         source_cloud, target_cloud = target_cloud, source_cloud
 
-        results_preprocess, _ = modulos.preprocess_point_clouds(source_cloud, target_cloud,
+        results_preprocess, _ = utils.preprocess_point_clouds(source_cloud, target_cloud,
                                                                 voxel_size)
         source_down, target_down, source_features, target_features = results_preprocess
 
         # Aplica o alinhamento RANSAC:
-        result_gr, _ = modulos.global_registration(source_down, target_down, source_features,
+        result_gr, _ = utils.global_registration(source_down, target_down, source_features,
                                                    target_features,
                                                    voxel_size)
 
-        # modulos.draw_registration_result(source_cloud, target_cloud, result_gr.transformation)
+        # utils.draw_registration_result(source_cloud, target_cloud, result_gr.transformation)
 
         print('Source, Target')
-        print(f'RRE: {modulos.rre(result_gr.transformation, t_gt)}')
-        print(f'TRE: {modulos.tre(result_gr.transformation, t_gt)}')
+        print(f'RRE: {utils.rre(result_gr.transformation, t_gt)}')
+        print(f'TRE: {utils.tre(result_gr.transformation, t_gt)}')

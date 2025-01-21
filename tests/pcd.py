@@ -1,12 +1,12 @@
-import modulos
+import utils
 import numpy as np
 
 if __name__ == '__main__':
     source_path = '../data/3DMatch/rgbd-scenes-v2-scene_10/cloud_bin_2.ply'
     target_path = '../data/3DMatch/rgbd-scenes-v2-scene_10/cloud_bin_0.ply'
 
-    source_cloud = modulos.load_point_cloud(source_path)
-    target_cloud = modulos.load_point_cloud(target_path)
+    source_cloud = utils.load_point_cloud(source_path)
+    target_cloud = utils.load_point_cloud(target_path)
 
     # print(f'Tamanho da nuvem de pontos source: {source_cloud}')
     # print(f'Tamanho da nuvem de pontos target: {target_cloud}')

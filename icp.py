@@ -2,13 +2,13 @@ from tqdm import tqdm, trange
 import numpy as np
 from datetime import datetime
 import json
-import modulos
+import utils
 
 if __name__ == '__main__':
     VERBOSE: bool = False
     NUM_OF_EXEC: int = 4
     voxel_sizes: tuple[float] = (0.05,)
-    DATASETS = modulos.get_datasets('./data/3DMatch/rgbd-scenes-v2-scene_10')
+    DATASETS = utils.get_datasets('./data/3DMatch/rgbd-scenes-v2-scene_10')
     CURRENT_DATE: str = datetime.now().strftime('%Y-%m-%d')
     # Registra o momento de início
     start_time = datetime.now()
@@ -19,14 +19,14 @@ if __name__ == '__main__':
     region_name: str = 'us-east-1'
 
     execution_times = {}
-    EXECUTION_FILE: str = 'execution_times.json'
+    EXECUTION_FILE: str = 'output/execution_times.json'
     results = {}
-    RESULTS_FILE: str = 'results.json'
+    RESULTS_FILE: str = 'output/results.json'
 
     # Obter ID e nome da instância
     if ON_AWS:
-        instance_id: str | None = modulos.get_instance_id()
-        instance_name: str | None = modulos.get_instance_name(instance_id)
+        instance_id: str | None = utils.get_instance_id()
+        instance_name: str | None = utils.get_instance_name(instance_id)
         print(f'ID da Instância: {instance_id}')
         if instance_name:
             print(f'Nome da Instância: {instance_name}')
@@ -44,8 +44,8 @@ if __name__ == '__main__':
         results[key_img] = {}
 
         # Carrega os dados:
-        source_cloud = modulos.load_point_cloud(source_ply_path)
-        target_cloud = modulos.load_point_cloud(target_ply_path)
+        source_cloud = utils.load_point_cloud(source_ply_path)
+        target_cloud = utils.load_point_cloud(target_ply_path)
 
         results[key_img]['length of source'] = len(source_cloud.points)
         results[key_img]['length of target'] = len(target_cloud.points)
@@ -62,14 +62,14 @@ if __name__ == '__main__':
 
                 # Aplica o pre-processamento:
                 # Devido ao decorator, a função `preprocess_point_clouds` retorna uma tupla com os resultados e o tempo de execução
-                results_preprocess, execution_time = modulos.preprocess_point_clouds(source_cloud, target_cloud,
+                results_preprocess, execution_time = utils.preprocess_point_clouds(source_cloud, target_cloud,
                                                                                      voxel_size)
                 source_down, target_down, source_features, target_features = results_preprocess
                 execution_times[key_img][key_voxel][run_key]['preprocess'] = execution_time
 
                 if DO_ICP:
                     # ICP Point-to-Point:
-                    result_icp_point, execution_time = modulos.fine_alignment_point_to_point(source_down,
+                    result_icp_point, execution_time = utils.fine_alignment_point_to_point(source_down,
                                                                                              target_down,
                                                                                              np.eye(4),
                                                                                              voxel_size)
@@ -77,13 +77,13 @@ if __name__ == '__main__':
                     results[key_img][key_voxel][run_key]['ICP Point'] = {}
                     results[key_img][key_voxel][run_key]['ICP Point'][
                         'transformation'] = result_icp_point.transformation.tolist()
-                    results[key_img][key_voxel][run_key]['ICP Point']['tre'] = modulos.tre(
+                    results[key_img][key_voxel][run_key]['ICP Point']['tre'] = utils.tre(
                         result_icp_point.transformation, t_gt)
-                    results[key_img][key_voxel][run_key]['ICP Point']['rre'] = modulos.rre(
+                    results[key_img][key_voxel][run_key]['ICP Point']['rre'] = utils.rre(
                         result_icp_point.transformation, t_gt)
 
                     # ICP Point-to-Plane:
-                    result_icp_plane, execution_time = modulos.fine_alignment_point_to_plane(source_down,
+                    result_icp_plane, execution_time = utils.fine_alignment_point_to_plane(source_down,
                                                                                              target_down,
                                                                                              np.eye(4),
                                                                                              voxel_size)
@@ -91,9 +91,9 @@ if __name__ == '__main__':
                     results[key_img][key_voxel][run_key]['ICP Plane'] = {}
                     results[key_img][key_voxel][run_key]['ICP Plane'][
                         'transformation'] = result_icp_plane.transformation.tolist()
-                    results[key_img][key_voxel][run_key]['ICP Plane']['tre'] = modulos.tre(
+                    results[key_img][key_voxel][run_key]['ICP Plane']['tre'] = utils.tre(
                         result_icp_plane.transformation, t_gt)
-                    results[key_img][key_voxel][run_key]['ICP Plane']['rre'] = modulos.rre(
+                    results[key_img][key_voxel][run_key]['ICP Plane']['rre'] = utils.rre(
                         result_icp_plane.transformation, t_gt)
 
     # ########################### ####### ###########################
@@ -108,14 +108,14 @@ if __name__ == '__main__':
     if ON_AWS:
         # O arquivo `execution_times.json` é enviado para o bucket com o nome `execution_times.json`
         s3_file = f'{instance_name}/{CURRENT_DATE}/{EXECUTION_FILE}'
-        if modulos.upload_to_aws(EXECUTION_FILE, BUCKET, s3_file):
+        if utils.upload_to_aws(EXECUTION_FILE, BUCKET, s3_file):
             print(f'Arquivo `{EXECUTION_FILE}` enviado para o bucket {BUCKET} com sucesso!')
         else:
             print(f'Erro ao enviar o arquivo `{EXECUTION_FILE}` para o bucket {BUCKET}')
 
         # O arquivo `results.json` é enviado para o bucket com o nome `results.json`
         s3_file = f'{instance_name}/{CURRENT_DATE}/{RESULTS_FILE}'
-        if modulos.upload_to_aws(RESULTS_FILE, BUCKET, s3_file):
+        if utils.upload_to_aws(RESULTS_FILE, BUCKET, s3_file):
             print(f'Arquivo `{RESULTS_FILE}` enviado para o bucket {BUCKET} com sucesso!')
         else:
             print(f'Erro ao enviar o arquivo `{RESULTS_FILE}` para o bucket {BUCKET}')

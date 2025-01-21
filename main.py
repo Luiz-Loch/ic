@@ -1,13 +1,13 @@
 from tqdm import tqdm, trange
 from datetime import datetime
 import json
-import modulos
+import utils
 
 if __name__ == '__main__':
     VERBOSE: bool = False
     NUM_OF_EXEC: int = 4
     voxel_sizes: tuple[float] = (0.05,)
-    DATASETS = modulos.get_datasets('./data')
+    DATASETS = utils.get_datasets('./data/3DMatch/rgbd-scenes-v2-scene_10')
     CURRENT_DATE: str = datetime.now().strftime('%Y-%m-%d')
     # Registra o momento de início
     start_time = datetime.now()
@@ -18,14 +18,14 @@ if __name__ == '__main__':
     region_name: str = 'us-east-1'
 
     execution_times = {}
-    EXECUTION_FILE: str = 'execution_times.json'
+    EXECUTION_FILE: str = 'output/execution_times.json'
     results = {}
-    RESULTS_FILE: str = 'results.json'
+    RESULTS_FILE: str = 'output/results.json'
 
     # Obter ID e nome da instância
     if ON_AWS:
-        instance_id: str | None = modulos.get_instance_id()
-        instance_name: str | None = modulos.get_instance_name(instance_id)
+        instance_id: str | None = utils.get_instance_id()
+        instance_name: str | None = utils.get_instance_name(instance_id)
         print(f'ID da Instância: {instance_id}')
         if instance_name:
             print(f'Nome da Instância: {instance_name}')
@@ -43,8 +43,8 @@ if __name__ == '__main__':
         results[key_img] = {}
 
         # Carrega os dados:
-        source_cloud = modulos.load_point_cloud(source_ply_path)
-        target_cloud = modulos.load_point_cloud(target_ply_path)
+        source_cloud = utils.load_point_cloud(source_ply_path)
+        target_cloud = utils.load_point_cloud(target_ply_path)
 
         results[key_img]['length of source'] = len(source_cloud.points)
         results[key_img]['length of target'] = len(target_cloud.points)
@@ -61,36 +61,36 @@ if __name__ == '__main__':
 
                 # Aplica o pre-processamento:
                 # Devido ao decorator, a função `preprocess_point_clouds` retorna uma tupla com os resultados e o tempo de execução
-                results_preprocess, execution_time = modulos.preprocess_point_clouds(source_cloud, target_cloud,
+                results_preprocess, execution_time = utils.preprocess_point_clouds(source_cloud, target_cloud,
                                                                                      voxel_size)
                 source_down, target_down, source_features, target_features = results_preprocess
                 execution_times[key_img][key_voxel][run_key]['preprocess'] = execution_time
 
                 # Aplica o alinhamento RANSAC:
-                result_gr, execution_time = modulos.global_registration(source_down, target_down, source_features,
+                result_gr, execution_time = utils.global_registration(source_down, target_down, source_features,
                                                                         target_features,
                                                                         voxel_size)
                 execution_times[key_img][key_voxel][run_key]['RANSAC'] = execution_time
                 results[key_img][key_voxel][run_key]['RANSAC'] = {}
                 results[key_img][key_voxel][run_key]['RANSAC']['transformation'] = result_gr.transformation.tolist()
-                results[key_img][key_voxel][run_key]['RANSAC']['tre'] = modulos.tre(result_gr.transformation, t_gt)
-                results[key_img][key_voxel][run_key]['RANSAC']['rre'] = modulos.rre(result_gr.transformation, t_gt)
+                results[key_img][key_voxel][run_key]['RANSAC']['tre'] = utils.tre(result_gr.transformation, t_gt)
+                results[key_img][key_voxel][run_key]['RANSAC']['rre'] = utils.rre(result_gr.transformation, t_gt)
 
                 # Aplica o alinhamento FGR:
-                result_fgr, execution_time = modulos.fast_global_registration(source_down, target_down, source_features,
+                result_fgr, execution_time = utils.fast_global_registration(source_down, target_down, source_features,
                                                                               target_features, voxel_size)
                 execution_times[key_img][key_voxel][run_key]['Fast Global Registration'] = execution_time
                 results[key_img][key_voxel][run_key]['Fast Global Registration'] = {}
                 results[key_img][key_voxel][run_key]['Fast Global Registration'][
                     'transformation'] = result_fgr.transformation.tolist()
-                results[key_img][key_voxel][run_key]['Fast Global Registration']['tre'] = modulos.tre(
+                results[key_img][key_voxel][run_key]['Fast Global Registration']['tre'] = utils.tre(
                     result_fgr.transformation, t_gt)
-                results[key_img][key_voxel][run_key]['Fast Global Registration']['rre'] = modulos.rre(
+                results[key_img][key_voxel][run_key]['Fast Global Registration']['rre'] = utils.rre(
                     result_fgr.transformation, t_gt)
 
                 if DO_ICP:
                     # Refina o alinhamento RANSAC com ICP Point-to-Point:
-                    result_gr_icp_point, execution_time = modulos.fine_alignment_point_to_point(source_down,
+                    result_gr_icp_point, execution_time = utils.fine_alignment_point_to_point(source_down,
                                                                                                 target_down,
                                                                                                 result_gr.transformation,
                                                                                                 voxel_size)
@@ -98,13 +98,13 @@ if __name__ == '__main__':
                     results[key_img][key_voxel][run_key]['RANSAC + ICP_Point'] = {}
                     results[key_img][key_voxel][run_key]['RANSAC + ICP_Point'][
                         'transformation'] = result_gr_icp_point.transformation.tolist()
-                    results[key_img][key_voxel][run_key]['RANSAC + ICP_Point']['tre'] = modulos.tre(
+                    results[key_img][key_voxel][run_key]['RANSAC + ICP_Point']['tre'] = utils.tre(
                         result_gr_icp_point.transformation, t_gt)
-                    results[key_img][key_voxel][run_key]['RANSAC + ICP_Point']['rre'] = modulos.rre(
+                    results[key_img][key_voxel][run_key]['RANSAC + ICP_Point']['rre'] = utils.rre(
                         result_gr_icp_point.transformation, t_gt)
 
                     # Refina o alinhamento RANSAC com ICP Point-to-Plane:
-                    result_gr_icp_plane, execution_time = modulos.fine_alignment_point_to_plane(source_down,
+                    result_gr_icp_plane, execution_time = utils.fine_alignment_point_to_plane(source_down,
                                                                                                 target_down,
                                                                                                 result_gr.transformation,
                                                                                                 voxel_size)
@@ -112,13 +112,13 @@ if __name__ == '__main__':
                     results[key_img][key_voxel][run_key]['RANSAC + ICP_Plane'] = {}
                     results[key_img][key_voxel][run_key]['RANSAC + ICP_Plane'][
                         'transformation'] = result_gr_icp_plane.transformation.tolist()
-                    results[key_img][key_voxel][run_key]['RANSAC + ICP_Plane']['tre'] = modulos.tre(
+                    results[key_img][key_voxel][run_key]['RANSAC + ICP_Plane']['tre'] = utils.tre(
                         result_gr_icp_plane.transformation, t_gt)
-                    results[key_img][key_voxel][run_key]['RANSAC + ICP_Plane']['rre'] = modulos.rre(
+                    results[key_img][key_voxel][run_key]['RANSAC + ICP_Plane']['rre'] = utils.rre(
                         result_gr_icp_plane.transformation, t_gt)
 
                     # Refina o alinhamento FGR com ICP Point-to-Point:
-                    result_fgr_icp_point, execution_time = modulos.fine_alignment_point_to_point(source_down,
+                    result_fgr_icp_point, execution_time = utils.fine_alignment_point_to_point(source_down,
                                                                                                  target_down,
                                                                                                  result_fgr.transformation,
                                                                                                  voxel_size)
@@ -127,13 +127,13 @@ if __name__ == '__main__':
                     results[key_img][key_voxel][run_key]['Fast Global Registration + ICP_Point'] = {}
                     results[key_img][key_voxel][run_key]['Fast Global Registration + ICP_Point'][
                         'transformation'] = result_fgr_icp_point.transformation.tolist()
-                    results[key_img][key_voxel][run_key]['Fast Global Registration + ICP_Point']['tre'] = modulos.tre(
+                    results[key_img][key_voxel][run_key]['Fast Global Registration + ICP_Point']['tre'] = utils.tre(
                         result_fgr_icp_point.transformation, t_gt)
-                    results[key_img][key_voxel][run_key]['Fast Global Registration + ICP_Point']['rre'] = modulos.rre(
+                    results[key_img][key_voxel][run_key]['Fast Global Registration + ICP_Point']['rre'] = utils.rre(
                         result_fgr_icp_point.transformation, t_gt)
 
                     # Refina o alinhamento FGR com ICP Point-to-Plane:
-                    result_fgr_icp_plane, execution_time = modulos.fine_alignment_point_to_plane(source_down,
+                    result_fgr_icp_plane, execution_time = utils.fine_alignment_point_to_plane(source_down,
                                                                                                  target_down,
                                                                                                  result_fgr.transformation,
                                                                                                  voxel_size)
@@ -142,30 +142,30 @@ if __name__ == '__main__':
                     results[key_img][key_voxel][run_key]['Fast Global Registration + ICP_Plane'] = {}
                     results[key_img][key_voxel][run_key]['Fast Global Registration + ICP_Plane'][
                         'transformation'] = result_fgr_icp_plane.transformation.tolist()
-                    results[key_img][key_voxel][run_key]['Fast Global Registration + ICP_Plane']['tre'] = modulos.tre(
+                    results[key_img][key_voxel][run_key]['Fast Global Registration + ICP_Plane']['tre'] = utils.tre(
                         result_fgr_icp_plane.transformation, t_gt)
-                    results[key_img][key_voxel][run_key]['Fast Global Registration + ICP_Plane']['rre'] = modulos.rre(
+                    results[key_img][key_voxel][run_key]['Fast Global Registration + ICP_Plane']['rre'] = utils.rre(
                         result_fgr_icp_plane.transformation, t_gt)
 
                 # ########################### TEASE++ ###########################
-                result_teaser, execution_time = modulos.robust_global_registration(source_down, target_down,
+                result_teaser, execution_time = utils.robust_global_registration(source_down, target_down,
                                                                                    source_features,
                                                                                    target_features,
                                                                                    voxel_size)
 
                 R_teaser = result_teaser.rotation
                 t_teaser = result_teaser.translation
-                T_teaser = modulos.Rt2T(R_teaser, t_teaser)
+                T_teaser = utils.Rt2T(R_teaser, t_teaser)
 
                 execution_times[key_img][key_voxel][run_key]['Robust Global Registration'] = execution_time
                 results[key_img][key_voxel][run_key]['Robust Global Registration'] = {}
                 results[key_img][key_voxel][run_key]['Robust Global Registration']['transformation'] = T_teaser.tolist()
-                results[key_img][key_voxel][run_key]['Robust Global Registration']['tre'] = modulos.tre(T_teaser, t_gt)
-                results[key_img][key_voxel][run_key]['Robust Global Registration']['rre'] = modulos.rre(T_teaser, t_gt)
+                results[key_img][key_voxel][run_key]['Robust Global Registration']['tre'] = utils.tre(T_teaser, t_gt)
+                results[key_img][key_voxel][run_key]['Robust Global Registration']['rre'] = utils.rre(T_teaser, t_gt)
 
                 # Refina o alinhamento TEASER com ICP Point-to-Point:
                 if DO_ICP:
-                    result_teaser_icp_point, execution_time = modulos.fine_alignment_point_to_point(source_down,
+                    result_teaser_icp_point, execution_time = utils.fine_alignment_point_to_point(source_down,
                                                                                                     target_down,
                                                                                                     T_teaser,
                                                                                                     voxel_size)
@@ -174,13 +174,13 @@ if __name__ == '__main__':
                     results[key_img][key_voxel][run_key]['Robust Global Registration + ICP_Point'] = {}
                     results[key_img][key_voxel][run_key]['Robust Global Registration + ICP_Point'][
                         'transformation'] = result_teaser_icp_point.transformation.tolist()
-                    results[key_img][key_voxel][run_key]['Robust Global Registration + ICP_Point']['tre'] = modulos.tre(
+                    results[key_img][key_voxel][run_key]['Robust Global Registration + ICP_Point']['tre'] = utils.tre(
                         result_teaser_icp_point.transformation, t_gt)
-                    results[key_img][key_voxel][run_key]['Robust Global Registration + ICP_Point']['rre'] = modulos.rre(
+                    results[key_img][key_voxel][run_key]['Robust Global Registration + ICP_Point']['rre'] = utils.rre(
                         result_teaser_icp_point.transformation, t_gt)
 
                     # Refina o alinhamento TEASER com ICP Point-to-Plane:
-                    result_teaser_icp_plane, execution_time = modulos.fine_alignment_point_to_plane(source_down,
+                    result_teaser_icp_plane, execution_time = utils.fine_alignment_point_to_plane(source_down,
                                                                                                     target_down,
                                                                                                     T_teaser,
                                                                                                     voxel_size)
@@ -189,9 +189,9 @@ if __name__ == '__main__':
                     results[key_img][key_voxel][run_key]['Robust Global Registration + ICP_Plane'] = {}
                     results[key_img][key_voxel][run_key]['Robust Global Registration + ICP_Plane'][
                         'transformation'] = result_teaser_icp_plane.transformation.tolist()
-                    results[key_img][key_voxel][run_key]['Robust Global Registration + ICP_Plane']['tre'] = modulos.tre(
+                    results[key_img][key_voxel][run_key]['Robust Global Registration + ICP_Plane']['tre'] = utils.tre(
                         result_teaser_icp_plane.transformation, t_gt)
-                    results[key_img][key_voxel][run_key]['Robust Global Registration + ICP_Plane']['rre'] = modulos.rre(
+                    results[key_img][key_voxel][run_key]['Robust Global Registration + ICP_Plane']['rre'] = utils.rre(
                         result_teaser_icp_plane.transformation, t_gt)
 
                 # ########################### ####### ###########################
@@ -206,14 +206,14 @@ if __name__ == '__main__':
     if ON_AWS:
         # O arquivo `execution_times.json` é enviado para o bucket com o nome `execution_times.json`
         s3_file = f'{instance_name}/{CURRENT_DATE}/{EXECUTION_FILE}'
-        if modulos.upload_to_aws(EXECUTION_FILE, BUCKET, s3_file):
+        if utils.upload_to_aws(EXECUTION_FILE, BUCKET, s3_file):
             print(f'Arquivo `{EXECUTION_FILE}` enviado para o bucket {BUCKET} com sucesso!')
         else:
             print(f'Erro ao enviar o arquivo `{EXECUTION_FILE}` para o bucket {BUCKET}')
 
         # O arquivo `results.json` é enviado para o bucket com o nome `results.json`
         s3_file = f'{instance_name}/{CURRENT_DATE}/{RESULTS_FILE}'
-        if modulos.upload_to_aws(RESULTS_FILE, BUCKET, s3_file):
+        if utils.upload_to_aws(RESULTS_FILE, BUCKET, s3_file):
             print(f'Arquivo `{RESULTS_FILE}` enviado para o bucket {BUCKET} com sucesso!')
         else:
             print(f'Erro ao enviar o arquivo `{RESULTS_FILE}` para o bucket {BUCKET}')
