@@ -22,7 +22,7 @@ if __name__ == '__main__':
         target_cloud = utils.load_point_cloud(target_ply_path)
         print('Nuvens de pontos carregadas.')
         print("Nuvens de ponto alinhadas: ")
-        utils.draw_registration_result(target_cloud, source_cloud, t_gt, nome='ETH')
+        utils.draw_registration_result(target_cloud, source_cloud, t_gt, window_name='ETH')
         print('#' * 50)
 
     if test == 2:
@@ -43,7 +43,7 @@ if __name__ == '__main__':
         target_cloud = utils.load_point_cloud(target_ply_path)
         print('Nuvens de pontos carregadas.')
         print("Nuvens de ponto alinhadas: ")
-        utils.draw_registration_result(target_cloud, source_cloud, t_gt, nome='ETH')
+        utils.draw_registration_result(target_cloud, source_cloud, t_gt, window_name='ETH')
         print('#' * 50)
 
     if test == 3:
@@ -64,7 +64,7 @@ if __name__ == '__main__':
         target_cloud = utils.load_point_cloud(target_ply_path)
         print('Nuvens de pontos carregadas.')
         print("Nuvens de ponto alinhadas: ")
-        utils.draw_registration_result(target_cloud, source_cloud, t_gt, nome='ETH')
+        utils.draw_registration_result(target_cloud, source_cloud, t_gt, window_name='ETH')
         print('#' * 50)
 
     if test == 4:
@@ -85,7 +85,7 @@ if __name__ == '__main__':
         target_cloud = utils.load_point_cloud(target_ply_path)
         print('Nuvens de pontos carregadas.')
         print("Nuvens de ponto alinhadas: ")
-        utils.draw_registration_result(target_cloud, source_cloud, t_gt, nome='ETH')
+        utils.draw_registration_result(target_cloud, source_cloud, t_gt, window_name='ETH')
         print('#' * 50)
 
     if test == 5:
@@ -111,7 +111,7 @@ if __name__ == '__main__':
                                                    target_features,
                                                    voxel_size)
 
-        utils.draw_registration_result(source_cloud, target_cloud, result_gr.transformation, nome='ETH')
+        utils.draw_registration_result(source_cloud, target_cloud, result_gr.transformation, window_name='ETH')
 
         print('Source, Target')
         print(f'RRE: {utils.rre(result_gr.transformation, t_gt)}')

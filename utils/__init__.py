@@ -1,6 +1,6 @@
 from .registration import *
 from .aws_utils import upload_to_aws, get_instance_id, get_instance_name
-from .data_loader import get_datasets
+from .data_loader import get_datasets, flattened_to_matrix, string_to_vector
 from .decorators import measure_time
 from .metrics import tre, rre
 from .point_cloud_utils import load_point_cloud, preprocess_point_clouds, draw_registration_result
@@ -17,6 +17,8 @@ __all__ = [
 
     # .data_loader:
     'get_datasets',
+    'flattened_to_matrix',
+    'string_to_vector',
 
     # .decorators:
     'measure_time',

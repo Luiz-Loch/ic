@@ -104,3 +104,34 @@ def get_datasets(data_dir: str, verbose: bool = False) -> tuple[str, str, np.nda
                     if verbose:
                         print(f'Retornando os valores: {source_ply_path}, {target_ply_path}, {t_gt}')
                     yield source_ply_path, target_ply_path, t_gt
+
+
+def flattened_to_matrix(flattened):
+    """
+    Converts a flattened matrix (12 values) into a 4x4 matrix.
+
+    Parameters:
+        flattened (list or np.ndarray): List or array with 12 matrix values.
+
+    Returns:
+        np.ndarray: Corresponding 4x4 matrix.
+    """
+    assert len(flattened) == 12, "The list must contain exactly 12 elements."
+
+    matrix = np.array(flattened, dtype=np.float64).reshape(3, 4)  # Shape (3, 4)
+    matrix = np.vstack([matrix, [0, 0, 0, 1]])  # Add the last row [0, 0, 0, 1]
+
+    return matrix
+
+
+def string_to_vector(matrix_string: str) -> list[float]:
+    """
+    Converts a space-separated string of 12 values into a list of floats.
+
+    Parameters:
+        matrix_string (str): A string containing 12 space-separated numbers.
+
+    Returns:
+        list: A list of 12 floating-point numbers.
+    """
+    return [float(value) for value in matrix_string.split()]

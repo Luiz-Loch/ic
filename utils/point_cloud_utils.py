@@ -6,7 +6,7 @@ import open3d as o3d
 
 def load_point_cloud(file_path: str) -> o3d.geometry.PointCloud:
     """
-    Loads a 3D point cloud file into a PointCloud object.
+    Loads a 3D point cloud file (KITTI .bin or other supported formats) into a PointCloud object.
 
     Parameters:
     file_path (str): The path to the point cloud file.
@@ -14,8 +14,23 @@ def load_point_cloud(file_path: str) -> o3d.geometry.PointCloud:
     Returns:
     o3d.geometry.PointCloud: The loaded point cloud.
     """
-    # Load point cloud from the specified file
-    cloud: o3d.geometry.PointCloud = o3d.io.read_point_cloud(file_path)
+    cloud: o3d.geometry.PointCloud = o3d.geometry.PointCloud()
+
+    if file_path.endswith(".bin"):
+        # Read KITTI .bin file (each row: x, y, z, intensity)
+        points: np.ndarray = np.fromfile(file_path, dtype=np.float32).reshape(-1, 4)
+        cloud.points = o3d.utility.Vector3dVector(points[:, :3]) # Extract (x, y, z) coordinates
+
+        # Normalize intensity values to [0, 1] for grayscale coloring
+        intensity: np.ndarray = points[:, 3]
+        intensity: np.ndarray = (intensity - intensity.min()) / (intensity.max() - intensity.min())
+        # Convert intensity to grayscale RGB (replicate across 3 channels)
+        colors: np.ndarray = np.tile(intensity[:, None], (1, 3))  # Shape (N, 3), e.g., [[0.1, 0.1, 0.1], ...]
+        cloud.colors = o3d.utility.Vector3dVector(colors)
+    else:
+        # Outros formatos suportados por Open3D (.ply, .pcd, .xyz, etc.)
+        cloud: o3d.geometry.PointCloud = o3d.io.read_point_cloud(file_path)
+
     return cloud
 
 

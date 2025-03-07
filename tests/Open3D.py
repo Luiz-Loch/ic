@@ -2,8 +2,9 @@ import open3d as o3d
 import utils
 
 if __name__ == '__main__':
-    VERBOSE = True
-    VOXEL_SIZE = 0.05
+    VERBOSE: bool = True
+    VOXEL_SIZE: float = 0.05
+
     if VERBOSE:
         print("Carregando os dados...")
     point_clouds = o3d.data.DemoICPPointClouds("../demo")
@@ -12,15 +13,26 @@ if __name__ == '__main__':
 
     if VERBOSE:
         print("Aplicando o pre-processamento e descritor FPFH...")
-    results_preprocess, _ = utils.preprocess_point_clouds(source_cloud, target_cloud, VOXEL_SIZE, VERBOSE)
+    results_preprocess, _ = utils.preprocess_point_clouds(source_cloud,
+                                                          target_cloud,
+                                                          VOXEL_SIZE,
+                                                          VERBOSE)
     source_down, target_down, source_features, target_features = results_preprocess
 
     if VERBOSE:
         print("Aplicando o alinhamento RANSAC e FGR...")
-    result_gr, _ = utils.global_registration(source_down, target_down, source_features, target_features,
-                                               VOXEL_SIZE, VERBOSE)
-    result_fgr, _ = utils.fast_global_registration(source_down, target_down, source_features,
-                                                     target_features, VOXEL_SIZE, VERBOSE)
+    result_gr, _ = utils.global_registration(source_down,
+                                             target_down,
+                                             source_features,
+                                             target_features,
+                                             VOXEL_SIZE,
+                                             VERBOSE)
+    result_fgr, _ = utils.fast_global_registration(source_down,
+                                                   target_down,
+                                                   source_features,
+                                                   target_features,
+                                                   VOXEL_SIZE,
+                                                   VERBOSE)
 
     print(f"RANSAC: {result_gr}")
     print(f"RANSAC:                         {result_gr.fitness}")
@@ -32,9 +44,9 @@ if __name__ == '__main__':
     if VERBOSE:
         print("Refinando o alinhamento com ICP Point-to-Point e ICP Point-to-Plane...")
     result_gr_icp_point, _ = utils.fine_alignment_point_to_point(source_down, target_down, result_gr.transformation,
-                                                                   VOXEL_SIZE, VERBOSE)
+                                                                 VOXEL_SIZE, VERBOSE)
     result_gr_icp_plane, _ = utils.fine_alignment_point_to_plane(source_down, target_down, result_gr.transformation,
-                                                                   VOXEL_SIZE, VERBOSE)
+                                                                 VOXEL_SIZE, VERBOSE)
 
     print(f"RANSAC + ICP Point-to-Point: {result_gr_icp_point}")
     print(f"RANSAC + ICP Point-to-Point:    {result_gr_icp_point.fitness}")

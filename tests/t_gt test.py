@@ -1,11 +1,10 @@
 import utils
 
-
 if __name__ == '__main__':
     # Caminho do diretório
-    data_dir = '../data'
-    VERBOSE = False
-    count = 0
+    data_dir: str = '../data/KITTI'
+    VERBOSE: bool = True
+    count: int = 0
 
     # Teste da função get_datasets
     for source_ply_path, target_ply_path, t_gt in utils.get_datasets(data_dir, VERBOSE):

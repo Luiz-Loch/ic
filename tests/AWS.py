@@ -1,21 +1,21 @@
 import utils
 
 if __name__ == '__main__':
-    BUCKET = 'benchmarks-ic'
-    TESTE_FILE = 'teste.txt'
+    BUCKET: str = 'benchmarks-ic'
+    TESTE_FILE: str = './teste.txt'
     instance_id = utils.get_instance_id()
     instance_name = utils.get_instance_name(instance_id)
 
     print('Iniciando o script...')
 
-    print(f'ID da Instância: {instance_id}')
+    print(f'ID da instância: {instance_id}')
     if instance_name:
-        print(f'Nome da Instância: {instance_name}')
+        print(f'Nome da instância: {instance_name}')
     else:
-        print('Nome da Instância não encontrado')
+        print('Nome da instância não encontrado')
 
-    # O arquivo `execution_times.json` é enviado para o bucket com o nome `execution_times.json`
-    s3_file = f'{instance_name}/Teste'
+    # Tentativa de upload de arquivo para o bucket
+    s3_file = f'{instance_name}/teste'
     if utils.upload_to_aws(TESTE_FILE, BUCKET, s3_file):
         print(f'Arquivo `{TESTE_FILE}` enviado para o bucket {BUCKET} com sucesso!')
     else:
