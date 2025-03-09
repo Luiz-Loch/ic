@@ -1,0 +1,6 @@
+[submodule "external/TEASER-plusplus"]
+	path = external/TEASER-plusplus
+	url = https://github.com/MIT-SPARK/TEASER-plusplus.git
+[submodule "external/DeepGlobalRegistration"]
+	path = external/DeepGlobalRegistration
+	url = https://github.com/chrischoy/DeepGlobalRegistration.git
