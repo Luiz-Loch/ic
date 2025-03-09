@@ -26,6 +26,6 @@ echo "packages installed!" >>~/status.txt
 #echo "pyenv echoes done!" >>~/status.txt
 
 # clone dos repositórios
-git clone --recursive SEU_REPO.git ~/ic
+git clone --recursive https://github.com/Luiz-Loch/ic.git ~/ic
 
 echo "Repositories cloned!" >>~/status.txt

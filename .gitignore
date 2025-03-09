@@ -6,6 +6,9 @@
 *.tfstate
 *.tfstate.*
 
+# lock file
+.terraform.lock.hcl
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 *__pycache__/*
