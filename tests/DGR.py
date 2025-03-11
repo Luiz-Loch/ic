@@ -8,6 +8,7 @@ import utils
 if __name__ == '__main__':
     VERBOSE: bool = True
     VOXEL_SIZE: float = 0.05
+    utils.download_model()
 
     if VERBOSE:
         print("Carregando os dados...")
