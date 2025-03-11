@@ -1,4 +1,8 @@
 import open3d as o3d
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import utils
 
 if __name__ == '__main__':
@@ -20,14 +24,10 @@ if __name__ == '__main__':
     source_down, target_down, source_features, target_features = results_preprocess
 
     if VERBOSE:
-        print("Aplicando o alinhamento global robusto ...")
-    results_teaser, _ = utils.robust_global_registration(source_down,
-                                                         target_down,
-                                                         source_features,
-                                                         target_features,
-                                                         VOXEL_SIZE,
-                                                         VERBOSE)
+        print("Aplicando o alinhamento Deep Global registration ...")
+    results_dgr, _ = utils.deep_global_registration(source_down,
+                                                       target_down,
+                                                       VOXEL_SIZE,
+                                                       VERBOSE)
 
-    print(f"TEASER++: {results_teaser}")
-    print(f"TEASER++:                         {results_teaser.fitness}")
-    print(f"TEASER++:                         {results_teaser.inlier_rmse}")
+    print(f"DGR: {results_dgr}")

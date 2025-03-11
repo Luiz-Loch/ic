@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 # User data is executed as root
-echo "Start!" >>~/status.txt
+echo "Start!" >> ~/status.txt
 
 apt update -y
-echo "update completed!" >>~/status.txt
+echo "update completed!" >> ~/status.txt
 
 apt install -y git \
     gcc build-essential \
@@ -19,7 +19,7 @@ apt install -y git \
     libboost-all-dev \
     libopenblas-dev
 
-echo "packages installed!" >>~/status.txt
+echo "packages installed!" >> ~/status.txt
 
 # Pyenv
 #curl https://pyenv.run | bash
@@ -27,5 +27,7 @@ echo "packages installed!" >>~/status.txt
 
 # clone dos repositórios
 git clone --recursive https://github.com/Luiz-Loch/ic.git ~/ic
+git clone https://github.com/NVIDIA/MinkowskiEngine.git ~/MinkowskiEngine
 
-echo "Repositories cloned!" >>~/status.txt
+echo "Repositories cloned!" >> ~/status.txt
+
