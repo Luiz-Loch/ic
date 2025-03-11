@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from tqdm import tqdm, trange
 from datetime import datetime
 import json

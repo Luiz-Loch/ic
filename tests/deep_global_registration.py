@@ -8,7 +8,7 @@ import utils
 if __name__ == '__main__':
     VERBOSE: bool = True
     VOXEL_SIZE: float = 0.05
-    utils.download_model()
+    utils.download_models()
 
     if VERBOSE:
         print("Carregando os dados...")
@@ -18,10 +18,12 @@ if __name__ == '__main__':
 
     if VERBOSE:
         print("Aplicando o alinhamento Deep Global registration ...")
+
     results_dgr, time = utils.deep_global_registration(source_cloud,
-                                                    target_cloud,
-                                                    VOXEL_SIZE,
-                                                    VERBOSE)
+                                                       target_cloud,
+                                                       VOXEL_SIZE,
+                                                       VERBOSE,
+                                                       utils.DeepGlobalRegistrationModels.DGR_3DMATCH)
 
     print(f"Tempo de processamento: {time}")
     print(f"DGR: {results_dgr}")

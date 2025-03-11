@@ -36,7 +36,10 @@ conda update -n base -c defaults conda -y
 
 echo "Instalação finalizada!"
 
-echo "Criando ambiente '${ENVIRONMENT_NAME}' com python ${PYTHON_VERSION}..."
+echo "Inicializando conda..."
+conda init
+
+echo "Criando ambiente ${ENVIRONMENT_NAME} com python ${PYTHON_VERSION}..."
 conda create -n ${ENVIRONMENT_NAME} python=${PYTHON_VERSION} -y
 echo "Ambiente criado com sucesso"
 

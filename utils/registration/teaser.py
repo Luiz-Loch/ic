@@ -1,7 +1,7 @@
 import open3d as o3d
 import teaserpp_python
 from utils.decorators import measure_time
-from utils.teaser_utils import establish_correspondences
+from utils.utils_teaser import establish_correspondences
 
 
 @measure_time
