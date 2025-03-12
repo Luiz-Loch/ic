@@ -35,9 +35,23 @@ class DeepGlobalRegistrationModels(Enum):
         self.path: str = path
 
 
-def download_progress_hook(t) -> callable:
+def download_progress_hook_s3(t) -> callable:
     """
-    Create a hook to update the progress bar during download.
+    Create a hook to update the progress bar for S3 downloads.
+
+    :param t: tqdm progress bar instance
+    :return: Callback function for boto3
+    """
+
+    def inner(bytes_transferred) -> None:
+        t.update(bytes_transferred)
+
+    return inner
+
+
+def download_progress_hook_urllib(t) -> callable:
+    """
+    Create a hook to update the progress bar during urlretrieve download.
 
     :param t: tqdm progress bar instance
     :return: Inner function to update progress
@@ -63,39 +77,21 @@ def download_model(model: DeepGlobalRegistrationModels, t) -> None:
 
     print(f"Downloading model {model.name}...")
     key: str = '/'.join(model.url_s3.split('/')[3:])
-    print(f"Downloading from S3 bucket `{bucket_name}`, key `{key}`...")
+    print(f"Downloading from S3 bucket `{bucket_name}` file `{key}`...")
     try:
-        s3.download_file(bucket_name, key, model.path, Callback=download_progress_hook(t))
-        print(f"Download complete: {model.path}")
+        s3.download_file(bucket_name, key, model.path, Callback=download_progress_hook_s3(t))
+        print(f"\nDownload complete: {model.path}")
         return
     except Exception as e:
-        print(f"Failed to download from {model.url_s3}: {e}")
+        print(f"\nFailed to download from {model.url_s3}: {e}")
 
     print(f"Downloading from {model.url_external}...")
     try:
-        urlretrieve(model.url_external, model.path, reporthook=download_progress_hook(t))
-        print(f"Download complete: {model.path}")
+        urlretrieve(model.url_external, model.path, reporthook=download_progress_hook_urllib(t))
+        print(f"\nDownload complete: {model.path}")
         return
     except Exception as e:
-        print(f"Failed to download from {model.url_external}: {e}")
-
-
-# def download_model(model: DeepGlobalRegistrationModels, t) -> None:
-#     """
-#     Download a model from a given URL and save it to the specified path.
-#
-#     :param model:
-#     :param t: tqdm progress bar instance
-#     """
-#     print(f"Downloading model {model.name}...")
-#     for url in [model.url_s3, model.url_external]:
-#         try:
-#             print(f"Downloading from {url}...")
-#             urlretrieve(url, model.path, reporthook=download_progress_hook(t))
-#             print(f"Download complete: {model.path}")
-#             break
-#         except Exception as e:
-#             print(f"Failed to download from {url}: {e}")
+        print(f"\nFailed to download from {model.url_external}: {e}")
 
 
 def download_models() -> None:
