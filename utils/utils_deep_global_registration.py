@@ -1,5 +1,5 @@
-import concurrent.futures
 import os
+import boto3
 from enum import Enum
 from tqdm import tqdm
 from urllib.request import urlretrieve
@@ -58,15 +58,44 @@ def download_model(model: DeepGlobalRegistrationModels, t) -> None:
     :param model:
     :param t: tqdm progress bar instance
     """
+    bucket_name: str = "benchmarks-ic"
+    s3 = boto3.client('s3')
+
     print(f"Downloading model {model.name}...")
-    for url in [model.url_s3, model.url_external]:
-        try:
-            print(f"Downloading from {url}...")
-            urlretrieve(url, model.path, reporthook=download_progress_hook(t))
-            print(f"Download complete: {model.path}")
-            break
-        except Exception as e:
-            print(f"Failed to download from {url}: {e}")
+    key: str = '/'.join(model.url_s3.split('/')[3:])
+    print(f"Downloading from S3 bucket `{bucket_name}`, key `{key}`...")
+    try:
+        s3.download_file(bucket_name, key, model.path, Callback=download_progress_hook(t))
+        print(f"Download complete: {model.path}")
+        return
+    except Exception as e:
+        print(f"Failed to download from {model.url_s3}: {e}")
+
+    print(f"Downloading from {model.url_external}...")
+    try:
+        urlretrieve(model.url_external, model.path, reporthook=download_progress_hook(t))
+        print(f"Download complete: {model.path}")
+        return
+    except Exception as e:
+        print(f"Failed to download from {model.url_external}: {e}")
+
+
+# def download_model(model: DeepGlobalRegistrationModels, t) -> None:
+#     """
+#     Download a model from a given URL and save it to the specified path.
+#
+#     :param model:
+#     :param t: tqdm progress bar instance
+#     """
+#     print(f"Downloading model {model.name}...")
+#     for url in [model.url_s3, model.url_external]:
+#         try:
+#             print(f"Downloading from {url}...")
+#             urlretrieve(url, model.path, reporthook=download_progress_hook(t))
+#             print(f"Download complete: {model.path}")
+#             break
+#         except Exception as e:
+#             print(f"Failed to download from {url}: {e}")
 
 
 def download_models() -> None:

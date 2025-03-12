@@ -27,3 +27,5 @@ if __name__ == '__main__':
 
     print(f"Tempo de processamento: {time}")
     print(f"DGR: {results_dgr}")
+
+    utils.draw_registration_result(source_cloud, target_cloud, results_dgr)
