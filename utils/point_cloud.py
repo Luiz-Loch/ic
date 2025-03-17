@@ -1,7 +1,14 @@
 from utils.decorators import measure_time
+from utils.utils_deep_global_registration import compute_fcgf_feature, FCGFModels
+from enum import Enum
 import copy
 import numpy as np
 import open3d as o3d
+
+
+class FeatureMethod(Enum):
+    FPFH: str = "FPFH"
+    FCGF: str = "FCGF"
 
 
 def load_point_cloud(file_path: str) -> o3d.geometry.PointCloud:
@@ -19,7 +26,7 @@ def load_point_cloud(file_path: str) -> o3d.geometry.PointCloud:
     if file_path.endswith(".bin"):
         # Read KITTI .bin file (each row: x, y, z, intensity)
         points: np.ndarray = np.fromfile(file_path, dtype=np.float32).reshape(-1, 4)
-        cloud.points = o3d.utility.Vector3dVector(points[:, :3]) # Extract (x, y, z) coordinates
+        cloud.points = o3d.utility.Vector3dVector(points[:, :3])  # Extract (x, y, z) coordinates
 
         # Normalize intensity values to [0, 1] for grayscale coloring
         intensity: np.ndarray = points[:, 3]
@@ -38,6 +45,8 @@ def load_point_cloud(file_path: str) -> o3d.geometry.PointCloud:
 def preprocess_point_clouds(source_cloud: o3d.geometry.PointCloud,
                             target_cloud: o3d.geometry.PointCloud,
                             voxel_size: float,
+                            feature_method: FeatureMethod = FeatureMethod.FPFH,
+                            fcgf_model: FCGFModels = FCGFModels.FCGF_3DMATCH,
                             verbose: bool = False):
     """
     Preprocesses two point clouds by downsampling, estimating normals, and computing FPFH features.
@@ -53,6 +62,7 @@ def preprocess_point_clouds(source_cloud: o3d.geometry.PointCloud,
     """
     radius_normal: float = voxel_size * 2
     radius_feature: float = voxel_size * 5
+
     if verbose:
         print(f"Downsampling the point cloud to voxel size {voxel_size:0.03f}.")
 
@@ -70,15 +80,29 @@ def preprocess_point_clouds(source_cloud: o3d.geometry.PointCloud,
         o3d.geometry.KDTreeSearchParamHybrid(radius=radius_normal, max_nn=30)
     )
 
-    source_feature = o3d.pipelines.registration.compute_fpfh_feature(
-        source_cloud_downsampled,
-        o3d.geometry.KDTreeSearchParamHybrid(radius=radius_feature, max_nn=100)
-    )
+    if feature_method == FeatureMethod.FPFH:
+        if verbose:
+            print(f"Computing FPFH features with search radius {radius_feature:0.03f}.")
 
-    target_feature = o3d.pipelines.registration.compute_fpfh_feature(
-        target_cloud_downsampled,
-        o3d.geometry.KDTreeSearchParamHybrid(radius=radius_feature, max_nn=100)
-    )
+        source_feature = o3d.pipelines.registration.compute_fpfh_feature(
+            source_cloud_downsampled,
+            o3d.geometry.KDTreeSearchParamHybrid(radius=radius_feature, max_nn=100)
+        )
+
+        target_feature = o3d.pipelines.registration.compute_fpfh_feature(
+            target_cloud_downsampled,
+            o3d.geometry.KDTreeSearchParamHybrid(radius=radius_feature, max_nn=100)
+        )
+
+    elif feature_method == FeatureMethod.FCGF:
+        if verbose:
+            print(f"Computing with FCGF features.")
+
+        source_feature = compute_fcgf_feature(source_cloud_downsampled, fcgf_model)
+        target_feature = compute_fcgf_feature(target_cloud_downsampled, fcgf_model)
+
+    else:
+        raise ValueError(f"Invalid feature method: {feature_method}")
 
     return source_cloud_downsampled, target_cloud_downsampled, source_feature, target_feature
 
