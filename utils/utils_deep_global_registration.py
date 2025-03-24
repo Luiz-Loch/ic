@@ -13,13 +13,13 @@ class DeepGlobalRegistrationModels(Enum):
     """
     DGR_3DMATCH = (
         "http://node2.chrischoy.org/data/projects/DGR/ResUNetBN2C-feat32-3dmatch-v0.05.pth",
-        "https://benchmarks-ic.s3.us-east-1.amazonaws.com/deep_global_registration/models/ResUNetBN2C-feat32-3dmatch-v0.05.pth",
+        "https://benchmarks-ic.s3.us-east-1.amazonaws.com/models/DGR/ResUNetBN2C-feat32-3dmatch-v0.05.pth",
         "./models/DGR/ResUNetBN2C-feat32-3dmatch-v0.05.pth"
     )
 
     DGR_KITTI = (
         "http://node2.chrischoy.org/data/projects/DGR/ResUNetBN2C-feat32-kitti-v0.3.pth",
-        "https://benchmarks-ic.s3.us-east-1.amazonaws.com/deep_global_registration/models/ResUNetBN2C-feat32-kitti-v0.3.pth",
+        "https://benchmarks-ic.s3.us-east-1.amazonaws.com/models/DGR/ResUNetBN2C-feat32-kitti-v0.3.pth",
         "./models/DGR/ResUNetBN2C-feat32-kitti-v0.3.pth"
     )
 
@@ -43,13 +43,13 @@ class FCGFModels(Enum):
     """
     FCGF_3DMATCH = (
         "https://node1.chrischoy.org/data/publications/fcgf/2019-08-16_19-21-47.pth",
-        "",
+        "https://benchmarks-ic.s3.us-east-1.amazonaws.com/models/FCGF/2019-08-16_19-21-47.pth",
         "./models/FCGF/2019-08-16_19-21-47.pth"
     )
 
     FCGF_KITTI = (
         "https://node1.chrischoy.org/data/publications/fcgf/KITTI-v0.3-ResUNetBN2C-conv1-5-nout32.pth",
-        "",
+        "https://benchmarks-ic.s3.us-east-1.amazonaws.com/models/FCGF/KITTI-v0.3-ResUNetBN2C-conv1-5-nout32.pth",
         "./models/FCGF/KITTI-v0.3-ResUNetBN2C-conv1-5-nout32.pth"
     )
 
@@ -100,7 +100,7 @@ def download_progress_hook_urllib(t) -> callable:
     return inner
 
 
-def download_model(model: DeepGlobalRegistrationModels, t) -> None:
+def download_model(model: DeepGlobalRegistrationModels | FCGFModels, t) -> None:
     """
     Download a model from a given URL and save it to the specified path.
 
@@ -109,6 +109,9 @@ def download_model(model: DeepGlobalRegistrationModels, t) -> None:
     """
     bucket_name: str = "benchmarks-ic"
     s3 = boto3.client('s3')
+
+    # Create the directory if it does not exist
+    os.makedirs(os.path.dirname(model.path), exist_ok=True)
 
     print(f"Downloading model {model.name}...")
     key: str = '/'.join(model.url_s3.split('/')[3:])
