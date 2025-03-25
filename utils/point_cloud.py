@@ -98,8 +98,8 @@ def preprocess_point_clouds(source_cloud: o3d.geometry.PointCloud,
         if verbose:
             print(f"Computing with FCGF features.")
 
-        source_feature = compute_fcgf_feature(source_cloud_downsampled, fcgf_model)
-        target_feature = compute_fcgf_feature(target_cloud_downsampled, fcgf_model)
+        source_cloud_downsampled, source_feature = compute_fcgf_feature(source_cloud, voxel_size, fcgf_model)
+        target_cloud_downsampled, target_feature = compute_fcgf_feature(target_cloud, voxel_size, fcgf_model)
 
     else:
         raise ValueError(f"Invalid feature method: {feature_method}")

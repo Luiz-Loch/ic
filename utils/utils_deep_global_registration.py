@@ -1,10 +1,20 @@
-import os
 import boto3
+import numpy as np
+import os
 import open3d as o3d
+import sys
+import torch
 from enum import Enum
 from tqdm import tqdm
 from urllib.request import urlretrieve
 
+# Add FCGF path to sys.path
+FCGF_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../external/FCGF"))
+if FCGF_PATH not in sys.path:
+    sys.path.append(FCGF_PATH)
+
+from external.FCGF.model.resunet import ResUNetBN2C
+from external.FCGF.util.misc import extract_features
 
 class DeepGlobalRegistrationModels(Enum):
     """
@@ -66,8 +76,25 @@ class FCGFModels(Enum):
         self.path: str = path
 
 def compute_fcgf_feature(point_cloud: o3d.geometry.PointCloud,
+                         voxel_size: float,
                          model: FCGFModels):
-    pass
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+    checkpoint = torch.load(model.path)
+    model = ResUNetBN2C(1, 16, normalize_feature=True, conv1_kernel_size=3, D=3)
+    model.load_state_dict(checkpoint['state_dict'])
+    model.eval()
+
+    model = model.to(device)
+
+    xyz_down, feature = extract_features(
+        model,
+        xyz=np.array(point_cloud.points),
+        voxel_size=voxel_size,
+        device=device,
+        skip_check=True)
+
+    return xyz_down, feature
 
 
 def download_progress_hook_s3(t) -> callable:

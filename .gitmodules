@@ -4,3 +4,6 @@
 [submodule "external/DeepGlobalRegistration"]
 	path = external/DeepGlobalRegistration
 	url = https://github.com/chrischoy/DeepGlobalRegistration.git
+[submodule "external/FCGF"]
+	path = external/FCGF
+	url = https://github.com/chrischoy/FCGF.git
