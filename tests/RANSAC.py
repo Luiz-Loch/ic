@@ -1,5 +1,5 @@
 import open3d as o3d
-import utils
+import project_utils
 
 if __name__ == '__main__':
     VERBOSE: bool = True
@@ -13,7 +13,7 @@ if __name__ == '__main__':
 
     if VERBOSE:
         print("Aplicando o pre-processamento e descritor FPFH...")
-    results_preprocess, _ = utils.preprocess_point_clouds(source_cloud,
+    results_preprocess, _ = project_utils.preprocess_point_clouds(source_cloud,
                                                           target_cloud,
                                                           VOXEL_SIZE,
                                                           VERBOSE)
@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
     if VERBOSE:
         print("Aplicando o alinhamento global robusto ...")
-    results_teaser, _ = utils.robust_global_registration(source_down,
+    results_teaser, _ = project_utils.robust_global_registration(source_down,
                                                          target_down,
                                                          source_features,
                                                          target_features,

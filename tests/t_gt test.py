@@ -1,4 +1,4 @@
-import utils
+import project_utils
 
 if __name__ == '__main__':
     # Caminho do diretório
@@ -7,7 +7,7 @@ if __name__ == '__main__':
     count: int = 0
 
     # Teste da função get_datasets
-    for source_ply_path, target_ply_path, t_gt in utils.get_datasets(data_dir, VERBOSE):
+    for source_ply_path, target_ply_path, t_gt in project_utils.get_datasets(data_dir, VERBOSE):
         print(f'{source_ply_path}\n{target_ply_path}\n{t_gt}')
         print('#' * 50)
         count += 1

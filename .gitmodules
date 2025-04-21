@@ -7,3 +7,6 @@
 [submodule "external/FCGF"]
 	path = external/FCGF
 	url = https://github.com/chrischoy/FCGF.git
+[submodule "external/PointDSC"]
+	path = external/PointDSC
+	url = https://github.com/XuyangBai/PointDSC.git

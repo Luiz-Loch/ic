@@ -3,12 +3,12 @@ import sys
 import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-import utils
+import project_utils
 
 if __name__ == '__main__':
     VERBOSE: bool = True
     VOXEL_SIZE: float = 0.05
-    utils.download_models()
+    project_utils.download_models()
 
     if VERBOSE:
         print("Carregando os dados...")
@@ -19,13 +19,13 @@ if __name__ == '__main__':
     if VERBOSE:
         print("Aplicando o alinhamento Deep Global registration ...")
 
-    results_dgr, time = utils.deep_global_registration(source_cloud,
-                                                       target_cloud,
-                                                       VOXEL_SIZE,
-                                                       VERBOSE,
-                                                       utils.DeepGlobalRegistrationModels.DGR_3DMATCH)
-
-    print(f"Tempo de processamento: {time}")
-    print(f"DGR: {results_dgr}")
-
-    utils.draw_registration_result(source_cloud, target_cloud, results_dgr)
+    # results_dgr, time = project_project_utils.deep_global_registration(source_cloud,
+    #                                                    target_cloud,
+    #                                                    VOXEL_SIZE,
+    #                                                    VERBOSE,
+    #                                                    project_project_utils.DeepGlobalRegistrationModels.DGR_3DMATCH)
+    #
+    # print(f"Tempo de processamento: {time}")
+    # print(f"DGR: {results_dgr}")
+    #
+    # project_project_utils.draw_registration_result(source_cloud, target_cloud, results_dgr)

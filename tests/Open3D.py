@@ -1,5 +1,5 @@
 import open3d as o3d
-import utils
+import project_utils
 
 if __name__ == '__main__':
     VERBOSE: bool = True
@@ -13,7 +13,7 @@ if __name__ == '__main__':
 
     if VERBOSE:
         print("Aplicando o pre-processamento e descritor FPFH...")
-    results_preprocess, _ = utils.preprocess_point_clouds(source_cloud,
+    results_preprocess, _ = project_utils.preprocess_point_clouds(source_cloud,
                                                           target_cloud,
                                                           VOXEL_SIZE,
                                                           VERBOSE)
@@ -21,13 +21,13 @@ if __name__ == '__main__':
 
     if VERBOSE:
         print("Aplicando o alinhamento RANSAC e FGR...")
-    result_gr, _ = utils.global_registration(source_down,
+    result_gr, _ = project_utils.global_registration(source_down,
                                              target_down,
                                              source_features,
                                              target_features,
                                              VOXEL_SIZE,
                                              VERBOSE)
-    result_fgr, _ = utils.fast_global_registration(source_down,
+    result_fgr, _ = project_utils.fast_global_registration(source_down,
                                                    target_down,
                                                    source_features,
                                                    target_features,
@@ -43,9 +43,9 @@ if __name__ == '__main__':
 
     if VERBOSE:
         print("Refinando o alinhamento com ICP Point-to-Point e ICP Point-to-Plane...")
-    result_gr_icp_point, _ = utils.fine_alignment_point_to_point(source_down, target_down, result_gr.transformation,
+    result_gr_icp_point, _ = project_utils.fine_alignment_point_to_point(source_down, target_down, result_gr.transformation,
                                                                  VOXEL_SIZE, VERBOSE)
-    result_gr_icp_plane, _ = utils.fine_alignment_point_to_plane(source_down, target_down, result_gr.transformation,
+    result_gr_icp_plane, _ = project_utils.fine_alignment_point_to_plane(source_down, target_down, result_gr.transformation,
                                                                  VOXEL_SIZE, VERBOSE)
 
     print(f"RANSAC + ICP Point-to-Point: {result_gr_icp_point}")
