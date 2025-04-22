@@ -27,8 +27,8 @@ if __name__ == '__main__':
 
     if VERBOSE:
         print("Aplicando o alinhamento Point Maximal Cliques ...")
-    results_mac, _ = project_utils.maximal_cliques(source_down.points,
-                                                   target_down.points,
+    results_mac, _ = project_utils.maximal_cliques(source_down,
+                                                   target_down,
                                                    source_features,
                                                    target_features,
                                                    VOXEL_SIZE,

@@ -6,6 +6,7 @@ import sys
 import torch
 from easydict import EasyDict
 from project_utils.decorators import measure_time
+from project_utils.point_cloud import FeatureMethod
 from project_utils.utils_point_dsc import Snapshot
 
 # Add PointDSC path to sys.path
@@ -17,17 +18,34 @@ from external.PointDSC.models.PointDSC import PointDSC
 
 
 @measure_time
-def point_dsc(source_cloud: np.ndarray,
-              target_cloud: np.ndarray,
+def point_dsc(source_cloud: o3d.geometry.PointCloud,
+              target_cloud: o3d.geometry.PointCloud,
               source_features: o3d.pipelines.registration.Feature,
               target_features: o3d.pipelines.registration.Feature,
-              verbose: bool = False,
-              snapshot: Snapshot = Snapshot.SNAPSHOT_3DMATCH) -> np.ndarray:
+              voxel_size: int | float,
+              feature_method: FeatureMethod = FeatureMethod.FPFH,
+              snapshot: Snapshot = Snapshot.SNAPSHOT_3DMATCH,
+              verbose: bool = False) -> np.ndarray:
     """
     https://github.com/XuyangBai/PointDSC
     Não utilizou o voxel_size
     """
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+    if feature_method == FeatureMethod.FPFH:
+        source_cloud = np.asarray(source_cloud.points)
+        target_cloud = np.asarray(target_cloud.points)
+
+        # feature ajustment
+        source_features = np.array(source_features.data).T
+        source_features = source_features / (np.linalg.norm(source_features, axis=1, keepdims=True) + 1e-6)
+
+        target_features = np.array(target_features.data).T
+        target_features = target_features / (np.linalg.norm(target_features, axis=1, keepdims=True) + 1e-6)
+    elif feature_method == FeatureMethod.FCGF:
+        pass
+    else:
+        raise ValueError(f"Invalid feature method: {feature_method}")
 
     config_path = f'./external/PointDSC/snapshot/{snapshot.value}/config.json'
     config = json.load(open(config_path, 'r'))
@@ -52,15 +70,8 @@ def point_dsc(source_cloud: np.ndarray,
 
     model.eval()
 
-    # feature ajustment
-    _source_features = np.array(source_features.data).T
-    _source_features = _source_features / (np.linalg.norm(_source_features, axis=1, keepdims=True) + 1e-6)
-
-    _target_features = np.array(target_features.data).T
-    _target_features = _target_features / (np.linalg.norm(_target_features, axis=1, keepdims=True) + 1e-6)
-
     # matching
-    distance = np.sqrt(2 - 2 * (_source_features @ _target_features.T) + 1e-6)
+    distance = np.sqrt(2 - 2 * (source_features @ target_features.T) + 1e-6)
     source_idx = np.argmin(distance, axis=1)
     source_dis = np.min(distance, axis=1)
     corr = np.concatenate([np.arange(source_idx.shape[0])[:, None], source_idx[:, None]], axis=-1)

@@ -8,7 +8,7 @@ import project_utils
 
 if __name__ == '__main__':
     VERBOSE: bool = True
-    VOXEL_SIZE: float = 0.05
+    VOXEL_SIZE: float = 0.08
 
     if VERBOSE:
         print("Carregando os dados...")
@@ -27,14 +27,16 @@ if __name__ == '__main__':
 
     if VERBOSE:
         print("Aplicando o alinhamento Point DSC ...")
-    results_teaser, _ = project_utils.point_dsc(np.array(source_down.points),
-                                                np.array(target_down.points),
-                                                source_features,
-                                                target_features,
-                                                VOXEL_SIZE,
-                                                verbose=VERBOSE,
-                                                snapshot=project_utils.Snapshot.SNAPSHOT_KITTI)
+    results_point_dsc, _ = project_utils.point_dsc(source_down,
+                                                   target_down,
+                                                   source_features,
+                                                   target_features,
+                                                   VOXEL_SIZE,
+                                                   verbose=VERBOSE,
+                                                   feature_method=project_utils.FeatureMethod.FPFH,
+                                                   snapshot=project_utils.Snapshot.SNAPSHOT_KITTI)
 
-    print(f"PointDSC: {results_teaser}")
+    print("PointDSC:")
+    print(f"{results_point_dsc}")
     project_utils.draw_registration_result(source_cloud, target_cloud, np.eye(4))
-    project_utils.draw_registration_result(source_cloud, target_cloud, results_teaser)
+    project_utils.draw_registration_result(source_cloud, target_cloud, results_point_dsc)

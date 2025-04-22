@@ -39,8 +39,8 @@ def maximal_cliques(source_cloud: o3d.geometry.PointCloud,
                           axis=-1)  # n to 1
 
     if feature_method == FeatureMethod.FPFH:
-        src_pts = np.array(source_cloud, dtype=np.float32)[corr[:, 0]]
-        tgt_pts = np.array(target_cloud, dtype=np.float32)[corr[:, 1]]
+        src_pts = np.asarray(source_cloud.points, dtype=np.float32)[corr[:, 0]]
+        tgt_pts = np.asarray(target_cloud.points, dtype=np.float32)[corr[:, 1]]
     elif feature_method == FeatureMethod.FCGF:
         src_pts = source_cloud[corr[:, 0]]
         tgt_pts = target_cloud[corr[:, 1]]
