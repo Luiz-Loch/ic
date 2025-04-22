@@ -1,5 +1,5 @@
 from project_utils.decorators import measure_time
-from project_utils.utils_deep_global_registration import compute_fcgf_feature, FCGFModels
+# from project_utils.utils_deep_global_registration import compute_fcgf_feature, FCGFModels
 from enum import Enum
 import copy
 import numpy as np
@@ -46,7 +46,7 @@ def preprocess_point_clouds(source_cloud: o3d.geometry.PointCloud,
                             target_cloud: o3d.geometry.PointCloud,
                             voxel_size: float,
                             feature_method: FeatureMethod = FeatureMethod.FPFH,
-                            fcgf_model: FCGFModels = FCGFModels.FCGF_3DMATCH,
+                            # fcgf_model: FCGFModels = FCGFModels.FCGF_3DMATCH,
                             verbose: bool = False):
     """
     Preprocesses two point clouds by downsampling, estimating normals, and computing FPFH features.

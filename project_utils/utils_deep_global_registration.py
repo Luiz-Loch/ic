@@ -79,7 +79,7 @@ class FCGFModels(Enum):
 
 def compute_fcgf_feature(point_cloud: o3d.geometry.PointCloud,
                          voxel_size: float,
-                         model: FCGFModels):
+                         model: FCGFModels) -> tuple[np.ndarray, np.ndarray]:
     """
         https://github.com/chrischoy/FCGF/tree/master
     """
@@ -92,14 +92,14 @@ def compute_fcgf_feature(point_cloud: o3d.geometry.PointCloud,
 
     model = model.to(device)
 
-    xyz_down, feature = extract_features(
+    xyz_down, features = extract_features(
         model,
         xyz=np.array(point_cloud.points),
         voxel_size=voxel_size,
         device=device,
         skip_check=True)
 
-    return xyz_down, feature
+    return xyz_down.astype(np.float32), features.detach().cpu().numpy()
 
 
 def download_progress_hook_s3(t) -> callable:

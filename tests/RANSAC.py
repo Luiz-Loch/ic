@@ -21,13 +21,13 @@ if __name__ == '__main__':
 
     if VERBOSE:
         print("Aplicando o alinhamento global robusto ...")
-    results_teaser, _ = project_utils.robust_global_registration(source_down,
+    results_ransac, _ = project_utils.robust_global_registration(source_down,
                                                          target_down,
                                                          source_features,
                                                          target_features,
                                                          VOXEL_SIZE,
                                                          VERBOSE)
 
-    print(f"TEASER++: {results_teaser}")
-    print(f"TEASER++:                         {results_teaser.fitness}")
-    print(f"TEASER++:                         {results_teaser.inlier_rmse}")
+    print(f"RANSAC: {results_ransac}")
+    print(f"RANSAC:                         {results_ransac.fitness}")
+    print(f"RANSAC:                         {results_ransac.inlier_rmse}")

@@ -4,6 +4,7 @@ from .icp import fine_alignment_point_to_point, fine_alignment_point_to_plane
 # from .teaser import robust_global_registration
 # from .deep_global_registration import deep_global_registration
 from .point_dsc import point_dsc
+from .maximal_cliques import maximal_cliques
 
 __all__ = [
     # .fast_global_registration:
@@ -24,4 +25,7 @@ __all__ = [
 
     # Point DSC:
     'point_dsc',
+
+    # Maximal Cliques:
+    'maximal_cliques',
 ]
