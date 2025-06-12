@@ -1,14 +1,14 @@
 import open3d as o3d
-from project_utils.decorators import measure_time
+import numpy as np
 
 
-@measure_time
 def global_registration(source_cloud: o3d.geometry.PointCloud,
                         target_cloud: o3d.geometry.PointCloud,
                         source_features: o3d.pipelines.registration.Feature,
                         target_features: o3d.pipelines.registration.Feature,
                         voxel_size: int | float,
-                        verbose: bool = False) -> o3d.pipelines.registration.RegistrationResult:
+                        verbose: bool = False,
+                        **kwargs) -> np.ndarray:
     """
         Recebe uma par de nuvem de pontos, bem como seus descritores e realiza *global registration*.
         Utiliza o método RANSAC da biblioteca Open3D.
@@ -23,7 +23,7 @@ def global_registration(source_cloud: o3d.geometry.PointCloud,
         print(f"O raio de busca é {distance_threshold:0.03f}.")
 
     # Executa até atingir `max_iteration` ou `confidence`.
-    return o3d.pipelines.registration.registration_ransac_based_on_feature_matching(
+    result = o3d.pipelines.registration.registration_ransac_based_on_feature_matching(
         source_cloud, target_cloud, source_features, target_features, True,
         distance_threshold,
         o3d.pipelines.registration.TransformationEstimationPointToPoint(False),
@@ -35,3 +35,5 @@ def global_registration(source_cloud: o3d.geometry.PointCloud,
         ],
         o3d.pipelines.registration.RANSACConvergenceCriteria(
             max_iteration, confidence))
+
+    return np.asarray(result.transformation)

@@ -82,7 +82,7 @@ def establish_correspondences(source_cloud: o3d.geometry.PointCloud,
     return source_corrs, target_corrs
 
 
-def Rt2T(R, t):
+def Rt2T(R, t) -> np.ndarray:
     """
     Função auxiliar para unir a solução rotacionar e solução linear em uma única matriz
     Retirado de: https://github.com/MIT-SPARK/TEASER-plusplus/blob/master/examples/teaser_python_fpfh_icp/helpers.py

@@ -135,3 +135,31 @@ def string_to_vector(matrix_string: str) -> list[float]:
         list: A list of 12 floating-point numbers.
     """
     return [float(value) for value in matrix_string.split()]
+
+def kitti_read_gt_log(data_dir: str, verbose: bool = False) -> tuple[str, str, np.ndarray]:
+    """
+    """
+    base_path_name: str = "../data/KITTI/{:02d}/velodyne/{:06d}.bin"
+    try:
+        gt_log_file_path: str = os.path.join(data_dir, 'ground_truth.txt')
+    except FileNotFoundError:
+        raise Exception(f"File not found: `.../KITTI/ground_truth.txt`.")
+
+    if verbose:
+        print(f"Reading {gt_log_file_path}.")
+
+    with (open(gt_log_file_path, "r") as file):
+        next(file)  # Skip the first line (header)
+        for line in file:
+            parts = line.split()
+            source_ply_path: str = base_path_name.format(int(parts[0]), int(parts[1]))
+            target_ply_path: str = base_path_name.format(int(parts[2]), int(parts[3]))
+            t_gt: np.ndarray = np.array([float(x) for x in parts[4:]]).reshape(4, 4)
+
+            if verbose:
+                print(f"source: {source_ply_path}; target: {target_ply_path}")
+                print(f"t_gt:\n{t_gt}")
+                print("Fim da função.")
+                print("#" * 50)
+
+            yield source_ply_path, target_ply_path, t_gt

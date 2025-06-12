@@ -2,8 +2,7 @@ import os
 import sys
 import open3d as o3d
 import numpy as np
-from project_utils.decorators import measure_time
-from project_utils.utils_deep_global_registration import DeepGlobalRegistrationModels
+from project_utils.utils_deep_global_registration import DGRModels
 
 # Add DeepGlobalRegistration path to sys.path
 DGR_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../external/DeepGlobalRegistration"))
@@ -14,12 +13,12 @@ from external.DeepGlobalRegistration.core.deep_global_registration import DeepGl
 from external.DeepGlobalRegistration.config import get_config
 
 
-@measure_time
 def deep_global_registration(source_cloud: o3d.geometry.PointCloud,
                              target_cloud: o3d.geometry.PointCloud,
                              voxel_size: float,
                              verbose: bool = False,
-                             model: DeepGlobalRegistrationModels = DeepGlobalRegistrationModels.DGR_3DMATCH) -> np.ndarray:
+                             model: DGRModels = DGRModels.DGR_3DMATCH,
+                             **kwargs) -> np.ndarray:
     """
     São informadas as nuvens completas
     As features são processadas internamente (FCGF)

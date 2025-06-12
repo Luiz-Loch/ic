@@ -1,16 +1,15 @@
 import open3d as o3d
 import teaserpp_python
-from project_utils.decorators import measure_time
-from project_utils.utils_teaser import establish_correspondences
+import numpy as np
+from project_utils.utils_teaser import establish_correspondences, Rt2T
 
-
-@measure_time
 def robust_global_registration(source_cloud: o3d.geometry.PointCloud,
                                target_cloud: o3d.geometry.PointCloud,
                                source_features: o3d.pipelines.registration.Feature,
                                target_features: o3d.pipelines.registration.Feature,
                                voxel_size: int | float,
-                               verbose: bool = False):
+                               verbose: bool = False,
+                               **kwargs) -> np.ndarray:
     """
     Recebe uma par de nuvem de pontos, bem como seus descritores e realiza *global registration*.
     Utiliza a biblioteca TEASER++.
@@ -43,4 +42,7 @@ def robust_global_registration(source_cloud: o3d.geometry.PointCloud,
 
     solver = teaserpp_python.RobustRegistrationSolver(solver_params)
     solver.solve(source_corrs, target_corrs)
-    return solver.getSolution()
+    solution = solver.getSolution()
+    r = solution.rotation
+    t = solution.translation
+    return Rt2T(r, t)

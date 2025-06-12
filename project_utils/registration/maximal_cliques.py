@@ -10,15 +10,17 @@ from project_utils.utils_maximal_cliques import transform, rigid_transform_3d, p
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
-@measure_time
 def maximal_cliques(source_cloud: o3d.geometry.PointCloud,
                     target_cloud: o3d.geometry.PointCloud,
                     source_features: o3d.pipelines.registration.Feature,
                     target_features: o3d.pipelines.registration.Feature,
                     voxel_size: int | float,
                     feature_method: FeatureMethod = FeatureMethod.FPFH,
-                    verbose: bool = False):
-    """"""
+                    verbose: bool = False,
+                    **kwargs) -> np.ndarray:
+    """
+    https://github.com/zhangxy0517/3D-Registration-with-Maximal-Cliques
+    """
     if feature_method == FeatureMethod.FPFH:
         source_features = np.array(source_features.data).T
         source_features = source_features / (np.linalg.norm(source_features, axis=1, keepdims=True) + 1e-6)

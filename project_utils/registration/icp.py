@@ -8,7 +8,7 @@ def fine_alignment(source_cloud: o3d.geometry.PointCloud,
                    initial_transform: np.ndarray,
                    voxel_size: float,
                    icp_method,
-                   verbose: bool = False) -> o3d.pipelines.registration.RegistrationResult:
+                   verbose: bool = False) -> np.ndarray:
     """
     Recebe um par de nuvem de pontos, bem como uma transformação inicial para realizar um alinhamento.
     O tipo de alinhamento deve ser informado em `icp_method`.
@@ -24,7 +24,7 @@ def fine_alignment(source_cloud: o3d.geometry.PointCloud,
                                                          distance_threshold,
                                                          initial_transform,
                                                          icp_method)
-    return result
+    return np.asarray(result.transformation)
 
 
 @measure_time
@@ -32,7 +32,7 @@ def fine_alignment_point_to_point(source_cloud: o3d.geometry.PointCloud,
                                   target_cloud: o3d.geometry.PointCloud,
                                   initial_transform: np.ndarray,
                                   voxel_size: float,
-                                  verbose: bool = False) -> o3d.pipelines.registration.RegistrationResult:
+                                  verbose: bool = False) -> np.ndarray:
     """
     Recebe um par de nuvem de pontos, bem como uma transformação inicial para realizar um alinhamento fino.
     Utiliza o método Point to Point da biblioteca Open3D.
@@ -53,7 +53,7 @@ def fine_alignment_point_to_plane(source_cloud: o3d.geometry.PointCloud,
                                   target_cloud: o3d.geometry.PointCloud,
                                   initial_transform: np.ndarray,
                                   voxel_size: float,
-                                  verbose: bool = False) -> o3d.pipelines.registration.RegistrationResult:
+                                  verbose: bool = False) -> np.ndarray:
     """
     Recebe um par de nuvem de pontos, bem como uma transformação inicial para realizar um alinhamento fino.
     Utiliza o método Point to Plane da biblioteca Open3D.

@@ -17,7 +17,6 @@ if POINT_DSC not in sys.path:
 from external.PointDSC.models.PointDSC import PointDSC
 
 
-@measure_time
 def point_dsc(source_cloud: o3d.geometry.PointCloud,
               target_cloud: o3d.geometry.PointCloud,
               source_features: o3d.pipelines.registration.Feature,
@@ -25,7 +24,8 @@ def point_dsc(source_cloud: o3d.geometry.PointCloud,
               voxel_size: int | float,
               feature_method: FeatureMethod = FeatureMethod.FPFH,
               snapshot: Snapshot = Snapshot.SNAPSHOT_3DMATCH,
-              verbose: bool = False) -> np.ndarray:
+              verbose: bool = False,
+              **kwargs) -> np.ndarray:
     """
     https://github.com/XuyangBai/PointDSC
     Não utilizou o voxel_size

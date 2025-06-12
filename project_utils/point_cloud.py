@@ -10,7 +10,16 @@ class FeatureMethod(Enum):
     FPFH = "FPFH"
     FCGF = "FCGF"
 
+    # def model(self, fcgf_model: FCGFModels) -> str | None:
+    def model(self, fcgf_model) -> str | None:
+        if self == FeatureMethod.FPFH:
+            return None
+        elif self == FeatureMethod.FCGF:
+            return fcgf_model.value
+        return None
 
+
+@measure_time
 def load_point_cloud(file_path: str) -> o3d.geometry.PointCloud:
     """
     Loads a 3D point cloud file (KITTI .bin or other supported formats) into a PointCloud object.

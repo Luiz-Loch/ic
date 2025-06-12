@@ -17,7 +17,7 @@ from external.FCGF.model.resunet import ResUNetBN2C
 from external.FCGF.util.misc import extract_features
 
 
-class DeepGlobalRegistrationModels(Enum):
+class DGRModels(Enum):
     """
     Enum class representing the models for Deep Global Registration.
     Each model contains URLs for external and S3 sources, and a local path.
@@ -132,7 +132,7 @@ def download_progress_hook_urllib(t) -> callable:
     return inner
 
 
-def download_model(model: DeepGlobalRegistrationModels | FCGFModels, t) -> None:
+def download_model(model: DGRModels | FCGFModels, t) -> None:
     """
     download a model from a given URL and save it to the specified path.
 
@@ -169,7 +169,7 @@ def download_models() -> None:
     """
     print("Downloading models...")
     # for model in DeepGlobalRegistrationModels:
-    for model in list(DeepGlobalRegistrationModels) + list(FCGFModels):
+    for model in list(DGRModels) + list(FCGFModels):
         if not os.path.exists(model.path):
             print(f"Model {model.name} not found locally. Starting download...")
             with tqdm(unit='B', unit_scale=True, desc=model.name) as t:
