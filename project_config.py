@@ -82,9 +82,10 @@ def get_config() -> argparse.Namespace:
     # parser.add_argument('--dgr_model', type=str2dgr_model, default=DGRModels.DGR_3DMATCH)
     parser.add_argument('--point_dsc_snapshot', type=str2snapshot, default=Snapshot.SNAPSHOT_3DMATCH)
     parser.add_argument('--do_icp', type=str2bool, default=True)
-    parser.add_argument('--results_file', type=str, default=f'./outputs/{CURRENT_DATE}.csv')
 
     args: argparse.Namespace = parser.parse_args()
+
+    args.results_file = f"./outputs/{CURRENT_DATE}-{args.dataset.name}-{args.feature_method.name}-{args.registration_method.name}.csv"
 
     print_config_summary(args)
 

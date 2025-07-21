@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import argparse
+from datetime import datetime
 import os
 
 from tqdm import tqdm, trange
@@ -55,10 +56,11 @@ if __name__ == "__main__":
     results.append(header)
 
     for target_ply_path, source_ply_path, t_gt in tqdm(dataset.datasets):
+        log_time: str = datetime.now().strftime("%H:%M:%S")
         source_dataset, source_scene, source_frame = project_utils.get_dataset_info(source_ply_path)
         target_dataset, target_scene, target_frame = project_utils.get_dataset_info(target_ply_path)
-        tqdm.write(f"Running {registration_method.value[0]} on {source_dataset} {source_scene}")
-        tqdm.write(f"Source: {source_frame}, Target: {target_frame}")
+        tqdm.write(f"[{log_time}] Running {registration_method.value[0]} on {source_dataset} {source_scene}")
+        tqdm.write(f"[{log_time}] Source: {source_frame}, Target: {target_frame}")
 
         for voxel_size in voxel_sizes:
             for run in trange(num_of_exec, leave=False):
