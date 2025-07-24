@@ -24,6 +24,12 @@ Existem algumas linhas dos repositórios em `./external` que precisam ser ajusta
 
 ## Execução
 
+Por padrão, o *benchmark* será executado com:
+- `--num_of_exec 3`;
+- `--voxel_sizes 0.05`;
+- `--dataset ALL`;
+- `--do_icp True`;
+
 ```bash
 python main.py --feature_method FPFH --registration_method RANSAC
 python main.py --feature_method FPFH --registration_method FGR
