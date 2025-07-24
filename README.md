@@ -8,6 +8,10 @@
 
 Existem algumas linhas dos repositórios em `./external` que precisam ser ajustadas para funcionar com Python 3.11.9:
 - linhas com `future_fstrings` podem ser comentadas ou removidas, pois não são mais necessárias.
+  - `external/FCGF/lib/data_loaders.py`
+  - `external/FCGF/model/resunet.py`
+  - `external/FCGF/model/simpleunet.py`
+  - `external/FCGF/train.py`
 
 ### Bibliotecas Python
 

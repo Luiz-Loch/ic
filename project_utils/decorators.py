@@ -1,5 +1,6 @@
-from time import perf_counter
 from functools import wraps
+from time import perf_counter
+
 
 def measure_time(func):
     """

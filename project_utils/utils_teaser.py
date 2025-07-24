@@ -1,7 +1,7 @@
-from scipy.spatial import KDTree
-import open3d as o3d
 import numpy as np
+import open3d as o3d
 import teaserpp_python
+from scipy.spatial import KDTree
 
 
 def pcd2xyz(pcd: o3d.geometry.PointCloud):

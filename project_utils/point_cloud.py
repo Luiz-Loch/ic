@@ -1,9 +1,12 @@
-from project_utils.decorators import measure_time
-# from project_utils.utils_deep_global_registration import compute_fcgf_feature, FCGFModels
-from enum import Enum
 import copy
+from enum import Enum
+
 import numpy as np
 import open3d as o3d
+
+from project_utils.decorators import measure_time
+from project_utils.utils_deep_global_registration import (FCGFModels,
+                                                          compute_fcgf_feature)
 
 
 class FeatureMethod(Enum):

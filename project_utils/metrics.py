@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def tre(t_est: np.ndarray, t_gt: np.ndarray) -> float:
     """
     Calculates the translation error between the transformation matrices.

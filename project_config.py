@@ -1,8 +1,8 @@
 import argparse
-from project_utils import FeatureMethod, DataSetType, RegistrationMethod, Snapshot
-# from project_utils import FCGFModels, DGRModels
-
 from datetime import datetime
+
+from project_utils import (DataSetType, DGRModels, FCGFModels, FeatureMethod,
+                           RegistrationMethod, Snapshot)
 
 CURRENT_DATE: str = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
@@ -25,11 +25,11 @@ def str2feature_method(v) -> FeatureMethod:
         raise argparse.ArgumentTypeError(f"Invalid feature method: {v}. Must be one of {list(FeatureMethod)}.")
 
 
-# def str2fcgf_model(v) -> FCGFModels:
-#     try:
-#         return FCGFModels[v.upper()]
-#     except KeyError:
-#         raise argparse.ArgumentTypeError(f"Invalid FCGF model: {v}. Must be one of {list(FCGFModels)}.")
+def str2fcgf_model(v) -> FCGFModels:
+    try:
+        return FCGFModels[v.upper()]
+    except KeyError:
+        raise argparse.ArgumentTypeError(f"Invalid FCGF model: {v}. Must be one of {list(FCGFModels)}.")
 
 
 def str2registration_method(v) -> RegistrationMethod:
@@ -40,11 +40,11 @@ def str2registration_method(v) -> RegistrationMethod:
             f"Invalid registration method: {v}. Must be one of {list(RegistrationMethod)}.")
 
 
-# def str2dgr_model(v) -> DGRModels:
-#     try:
-#         return DGRModels[v.upper()]
-#     except KeyError:
-#         raise argparse.ArgumentTypeError(f"Invalid DGR model: {v}. Must be one of {list(DGRModels)}.")
+def str2dgr_model(v) -> DGRModels:
+    try:
+        return DGRModels[v.upper()]
+    except KeyError:
+        raise argparse.ArgumentTypeError(f"Invalid DGR model: {v}. Must be one of {list(DGRModels)}.")
 
 def str2snapshot(v) -> Snapshot:
     try:
@@ -59,11 +59,11 @@ def print_config_summary(config: argparse.Namespace) -> None:
     print(f"  📏 Voxel sizes: {', '.join(str(v) for v in config.voxel_sizes)}")
     print(f"  📚 Dataset: {config.dataset.name}")
     print(f"  🧩 Feature method: {config.feature_method.name}" +
-          # f" ({config.feature_method.model(config.fcgf_model)})")
-          "")
+          f" ({config.feature_method.model(config.fcgf_model)})")
+          # "")
     print(f"  🧭 Registration method: {config.registration_method.name}" +
-          # f" ({config.registration_method.model(config.dgr_model, config.point_dsc_snapshot)})")
-          "")
+          f" ({config.registration_method.model(config.dgr_model, config.point_dsc_snapshot)})")
+          # "")
     print(f"  🛠️ ICP enabled: {'Yes' if config.do_icp else 'No'}")
     print(f"  💾 Output file: {config.results_file}")
     print("")  # Blank line
@@ -77,9 +77,9 @@ def get_config() -> argparse.Namespace:
     parser.add_argument('--voxel_sizes', type=float, nargs='+', default=[0.05])
     parser.add_argument('--dataset', type=str2dataset_type, default=DataSetType.ALL)
     parser.add_argument('--feature_method', type=str2feature_method, default=FeatureMethod.FPFH)
-    # parser.add_argument('--fcgf_model', type=str2fcgf_model, default=FCGFModels.FCGF_3DMATCH)
+    parser.add_argument('--fcgf_model', type=str2fcgf_model, default=FCGFModels.FCGF_3DMATCH)
     parser.add_argument('--registration_method', type=str2registration_method, default=RegistrationMethod.RANSAC)
-    # parser.add_argument('--dgr_model', type=str2dgr_model, default=DGRModels.DGR_3DMATCH)
+    parser.add_argument('--dgr_model', type=str2dgr_model, default=DGRModels.DGR_3DMATCH)
     parser.add_argument('--point_dsc_snapshot', type=str2snapshot, default=Snapshot.SNAPSHOT_3DMATCH)
     parser.add_argument('--do_icp', type=str2bool, default=True)
 

@@ -1,7 +1,6 @@
 import numpy as np
 import torch
 
-
 # Source: https://github.com/zhangxy0517/3D-Registration-with-Maximal-Cliques/blob/main/Python_implement/example.py#L226
 
 def integrate_trans(R, t):

@@ -1,7 +1,9 @@
+import numpy as np
 import open3d as o3d
 import teaserpp_python
-import numpy as np
-from project_utils.utils_teaser import establish_correspondences, Rt2T
+
+from project_utils.utils_teaser import Rt2T, establish_correspondences
+
 
 def robust_global_registration(source_cloud: o3d.geometry.PointCloud,
                                target_cloud: o3d.geometry.PointCloud,

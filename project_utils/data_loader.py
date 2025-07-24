@@ -1,5 +1,6 @@
-import numpy as np
 import os
+
+import numpy as np
 
 
 def read_gt_log(file_path: str, verbose: bool = False) -> tuple[int, int, np.ndarray]:

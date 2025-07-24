@@ -1,5 +1,6 @@
-import open3d as o3d
 import numpy as np
+import open3d as o3d
+
 
 def fast_global_registration(source_cloud: o3d.geometry.PointCloud,
                              target_cloud: o3d.geometry.PointCloud,

@@ -1,7 +1,9 @@
 from enum import Enum
-from .data_loader import get_datasets, kitti_read_gt_log
-import open3d as o3d
+
 import numpy as np
+import open3d as o3d
+
+from .data_loader import get_datasets, kitti_read_gt_log
 
 
 def load_dataset(dataset_type, verbose: bool = False) -> list[tuple[str, str, np.ndarray]]:

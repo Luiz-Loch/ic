@@ -1,11 +1,13 @@
-import open3d as o3d
-import numpy as np
 import time
+
+import numpy as np
+import open3d as o3d
 import torch
 from igraph import Graph
-from project_utils.decorators import measure_time
+
 from project_utils.point_cloud import FeatureMethod
-from project_utils.utils_maximal_cliques import transform, rigid_transform_3d, post_refinement
+from project_utils.utils_maximal_cliques import (post_refinement,
+                                                 rigid_transform_3d, transform)
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 

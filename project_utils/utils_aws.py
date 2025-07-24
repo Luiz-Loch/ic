@@ -1,6 +1,7 @@
-import requests
 import boto3
+import requests
 from botocore.exceptions import NoCredentialsError
+
 
 def upload_to_aws(local_file: str, bucket: str, s3_file: str) -> bool:
     """

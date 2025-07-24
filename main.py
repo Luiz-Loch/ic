@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 import argparse
-from datetime import datetime
 import os
+from datetime import datetime
 
-from tqdm import tqdm, trange
 import pandas as pd
+from tqdm import tqdm, trange
 
 import project_utils
 from project_config import get_config

@@ -1,7 +1,9 @@
 import os
 import sys
-import open3d as o3d
+
 import numpy as np
+import open3d as o3d
+
 from project_utils.utils_deep_global_registration import DGRModels
 
 # Add DeepGlobalRegistration path to sys.path
@@ -9,8 +11,9 @@ DGR_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../extern
 if DGR_PATH not in sys.path:
     sys.path.append(DGR_PATH)
 
-from external.DeepGlobalRegistration.core.deep_global_registration import DeepGlobalRegistration
 from external.DeepGlobalRegistration.config import get_config
+from external.DeepGlobalRegistration.core.deep_global_registration import \
+    DeepGlobalRegistration
 
 
 def deep_global_registration(source_cloud: o3d.geometry.PointCloud,

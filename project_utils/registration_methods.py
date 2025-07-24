@@ -1,13 +1,12 @@
 from enum import Enum
+
 import numpy as np
+
 from . import measure_time
-from .registration import (global_registration,
-                           fast_global_registration,
-    # robust_global_registration,
-    # deep_global_registration,
-                           maximal_cliques,
-                           point_dsc)
-# from .utils_deep_global_registration import DGRModels
+from .registration import (deep_global_registration, fast_global_registration,
+                           global_registration, maximal_cliques, point_dsc,
+                           robust_global_registration)
+from .utils_deep_global_registration import DGRModels
 from .utils_point_dsc import Snapshot
 
 
@@ -48,8 +47,8 @@ class RegistrationMethod(Enum):
     def run(self, *args, **kwargs) -> np.ndarray:
         return self._function(*args, **kwargs)
 
-    # def model(self, dgr_model: DGRModels, point_dsc_snapshot: Snapshot) -> str | None:
-    def model(self, dgr_model, point_dsc_snapshot: Snapshot) -> str | None:
+    def model(self, dgr_model: DGRModels, point_dsc_snapshot: Snapshot) -> str | None:
+    # def model(self, dgr_model, point_dsc_snapshot: Snapshot) -> str | None:
         if self == RegistrationMethod.DGR:
             return dgr_model.value
         elif self == RegistrationMethod.POINT_DSC:

@@ -1,12 +1,13 @@
+import os
+import sys
+from enum import Enum
+from urllib.request import urlretrieve
+
 import boto3
 import numpy as np
-import os
 import open3d as o3d
-import sys
 import torch
-from enum import Enum
 from tqdm import tqdm
-from urllib.request import urlretrieve
 
 # Add FCGF path to sys.path
 FCGF_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "../external/FCGF"))
