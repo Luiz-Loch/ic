@@ -1,8 +1,14 @@
 import argparse
 from datetime import datetime
 
-from project_utils import (DataSetType, DGRModels, FCGFModels, FeatureMethod,
-                           RegistrationMethod, Snapshot)
+from project_utils import (
+    DataSetType,
+    DGRModels,
+    FCGFModels,
+    FeatureMethod,
+    RegistrationMethod,
+    Snapshot
+)
 
 CURRENT_DATE: str = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 

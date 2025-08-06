@@ -11,22 +11,19 @@ from project_config import get_config
 
 if __name__ == "__main__":
     config: argparse.Namespace = get_config()
-    # project_utils.download_models() # Downloads the models of DGR and FCGF
+    project_utils.download_models() # Downloads the models of DGR and FCGF
 
     verbose: bool = config.verbose
     num_of_exec: int = config.num_of_exec
     voxel_sizes: list[float] = config.voxel_sizes
     dataset: project_utils.DataSetType = config.dataset
     feature_method: project_utils.FeatureMethod = config.feature_method
-    # fcgf_model: project_utils.FCGFModels = config.fcgf_model
+    fcgf_model: project_utils.FCGFModels = config.fcgf_model
     registration_method: project_utils.RegistrationMethod = config.registration_method
-    # dgr_model = config.dgr_model
+    dgr_model = config.dgr_model
     point_dsc_snapshot = config.point_dsc_snapshot
     do_icp: bool = config.do_icp
     results_file: str = config.results_file
-
-    fcgf_model = None  # temp
-    dgr_model = None  # temp
 
     results: list[list] = []
     header: list[str] = [

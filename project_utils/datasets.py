@@ -11,8 +11,8 @@ def load_dataset(dataset_type, verbose: bool = False) -> list[tuple[str, str, np
         return kitti_read_gt_log("./data/KITTI", verbose=verbose)
 
     elif dataset_type == DataSetType.DEMO:
-        point_clouds = o3d.data.DemoICPPointClouds("../demo")
-        return (point_clouds.paths[0], point_clouds.paths[0], None)
+        point_clouds = o3d.data.DemoICPPointClouds("./data/demo")
+        return [(point_clouds.paths[0], point_clouds.paths[1], None)]
 
     elif dataset_type == DataSetType.ALL:
         datasets = []
